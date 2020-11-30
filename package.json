@@ -1,0 +1,7 @@
+{
+  "name": "advent-of-code",
+  "version": "1.0.2020",
+  "main": "index.js",
+  "author": "davidsharp <hello@davidsharp.codes>",
+  "license": "MIT"
+}
