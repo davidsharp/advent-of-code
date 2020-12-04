@@ -16,7 +16,6 @@ const part2 = input => parse(input).reduce(
         Number(doc.iyr)>=2010&&Number(doc.iyr)<=2020 &&
         Number(doc.eyr)>=2020&&Number(doc.eyr)<=2030
       )) return count
-      //if(/[0-9]+(cm|in)/.test(doc.hgt)) return count;
       const hgtV=/(\d+)(in|cm)/.exec(doc.hgt)
       if(!hgtV) return count
       const [,height,units]=hgtV
