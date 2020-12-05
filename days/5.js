@@ -19,12 +19,11 @@ const part1 = input => {
 }
 const part2 = input => {
   const seats = findSeats(input)
-  const seatPlan = (new Array(128)).fill([]).map(row=>(new Array(8)).fill(null))
-  seats.forEach(
-    ({row,column,id})=>seatPlan[row][column]=id
-  )
-  //console.log(seatPlan.map((row,i)=>({i,row})))
-  return 'got kinda lucky with this one tbh'
+  const filledSeats = seats.map(seat=>seat.id).sort((a,b)=>a>b?1:-1)
+  return filledSeats.reduce((expected,actual)=>{
+    if(expected==actual) return actual+1
+    else return expected
+  },filledSeats[0])
 }
 
 module.exports = {part1,part2}
