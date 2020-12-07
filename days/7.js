@@ -4,7 +4,7 @@ const parse = input => input.split('\n').reduce((map,line)=>{
     null:
     [...temp.matchAll(/[0-9]+ [a-z]+ [a-z]+/g)].map(x=>{
       let temp = x[0].split(' ')
-      return {amt:temp.shift(),type:temp.join(' ')}
+      return {amt:Number(temp.shift()),type:temp.join(' ')}
     })
   return map.set(bag,contents)
 },new Map())
@@ -14,6 +14,15 @@ const recursiveRuleCheck = myBag => rules => bag => {
   const contents = rules.get(bag)
   if(contents==null)return false
   return contents.reduce((a,_r)=>a||recursiveRuleCheck(myBag)(rules)(_r.type),false)
+}
+
+const recursiveBagCount = rules => bag => {
+  const contents = rules.get(bag)
+  if(contents==null)return 0
+  return contents.reduce((a,_r)=>{
+    //console.log(`${bag} contains ${_r.amt} ${_r.type}`)
+    return a+(_r.amt*(1+recursiveBagCount(rules)(_r.type)))
+  },0)
 }
 
 const part1 = input => {
@@ -28,7 +37,12 @@ const part1 = input => {
   }
   return temp.reduce((a,b)=>a+b,0)
 }
-const part2 = input => {}
+const part2 = input => {
+  const rules = parse(input)
+  const myBag = 'shiny gold'
+  const temp = recursiveBagCount(rules)(myBag)
+  return temp
+}
 
 module.exports = {part1, part2}
 
