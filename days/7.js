@@ -13,16 +13,17 @@ const recursiveRuleCheck = myBag => rules => bag => {
   if(bag==myBag)return true
   const contents = rules.get(bag)
   if(contents==null)return false
-  return contents.reduce((a,_r)=>a||recursiveRuleCheck(myBag)(rules)(_r.type),false)
+  return contents.reduce((a,_r)=>
+    a||recursiveRuleCheck(myBag)(rules)(_r.type)
+  ,false)
 }
 
 const recursiveBagCount = rules => bag => {
   const contents = rules.get(bag)
   if(contents==null)return 0
-  return contents.reduce((a,_r)=>{
-    //console.log(`${bag} contains ${_r.amt} ${_r.type}`)
-    return a+(_r.amt*(1+recursiveBagCount(rules)(_r.type)))
-  },0)
+  return contents.reduce((a,_r)=>
+    a+(_r.amt*(1+recursiveBagCount(rules)(_r.type)))
+  ,0)
 }
 
 const part1 = input => {
@@ -40,8 +41,7 @@ const part1 = input => {
 const part2 = input => {
   const rules = parse(input)
   const myBag = 'shiny gold'
-  const temp = recursiveBagCount(rules)(myBag)
-  return temp
+  return recursiveBagCount(rules)(myBag)
 }
 
 module.exports = {part1, part2}
