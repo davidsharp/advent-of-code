@@ -21,8 +21,8 @@ const part2 = input => {
   let setFound = null;
   for(let i = 0;!setFound&&i<data.length;i++){
     if(data[i]<goal){
-      setFound=sumToFindSet(data,i,goal)
-      if(setFound)setFound=data.slice(i,setFound)
+      const offset=sumToFindSet(data,i,goal)
+      if(offset)setFound=data.slice(i,setFound)
     }
   }
   setFound = setFound.sort((a,b)=>a>b?1:-1)
