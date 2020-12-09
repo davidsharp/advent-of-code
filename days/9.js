@@ -15,6 +15,27 @@ const part1 = input => {
   }
   return weakness
 }
-const part2 = input => {}
+const part2 = input => {
+  const goal = part1(input)
+  const data = parse(input)
+  let setFound = null;
+  for(let i = 0;!setFound&&i<data.length;i++){
+    if(data[i]<goal){
+      setFound=sumToFindSet(data,i,goal)
+      if(setFound)setFound=data.slice(i,setFound)
+    }
+  }
+  setFound = setFound.sort((a,b)=>a>b?1:-1)
+  return setFound.shift()+setFound.pop()
+}
+const sumToFindSet = (array, offset, goal) => {
+  let sum = 0
+  let index = 0
+  while(sum<goal){
+    sum+=array[offset+index++]
+  }
+  if(sum==goal) return offset+index
+  else return false
+}
 
 module.exports = {part1, part2}
