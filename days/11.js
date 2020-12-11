@@ -1,24 +1,17 @@
-const parse = input => {
-  const rows = input.split('\n')
-  return rows//.map(row=>row.split(''))
-}
+const parse = input => input.split('\n')
 
 const part1 = input => {
   const seats = parse(input)
   let state = seats
-  const width = seats[0].length
-  const height = seats.length
   let prevState = null
-  do{console.log(state.join('\n'),'\n')
+  do{
     prevState=[...state]
     state = state.map(
       (row,y)=>{
         return row.split('').map((seat,x)=>{
-          //if(seat=='.')return seat
-          //prevState[y][x]
           if(seat=='L'){
             if(prevState[y-1]){
-              const above = prevState[y-1].substring(x-1,x+1)
+              const above = prevState[y-1].substring(x-1,x+2)
               if(/#/.test(above)) return 'L';
             }
             if(prevState[y]){
@@ -26,7 +19,7 @@ const part1 = input => {
               if(prevState[y][x+1]&&prevState[y][x+1]=='#') return 'L';
             }
             if(prevState[y+1]){
-              const below = prevState[y+1].substring(x-1,x+1)
+              const below = prevState[y+1].substring(x-1,x+2)
               if(/#/.test(below)) return 'L';
             }
             return '#';
@@ -34,7 +27,7 @@ const part1 = input => {
           else if(seat=='#'){
             let count = 0;
             if(prevState[y-1]){
-              const above = prevState[y-1].substring(x-1,x+1)
+              const above = prevState[y-1].substring(x-1,x+2)
               count+=(above.split('#').length-1)
             }
             if(prevState[y]){
@@ -42,7 +35,7 @@ const part1 = input => {
               if(prevState[y][x+1]&&prevState[y][x+1]=='#') count++;
             }
             if(prevState[y+1]){
-              const below = prevState[y+1].substring(x-1,x+1)
+              const below = prevState[y+1].substring(x-1,x+2)
               count+=(below.split('#').length-1)
             }
             return count>=4?'L':'#'
