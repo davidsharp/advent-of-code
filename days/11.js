@@ -47,7 +47,62 @@ const part1 = input => {
   }while(state.join('\n')!=prevState.join('\n'))
   return state.join('\n').split('#').length-1
 }
-const part2 = input => {}
+const part2 = input => {
+  const seats = parse(input)
+  let state = seats
+  let prevState = null
+  do{//console.log(state.join('\n'),'\n')
+    prevState=[...state]
+    state = state.map(
+      (row,y)=>{
+        return row.split('').map((seat,x)=>{
+          if(seat=='L'){
+            const seenSeats = [
+              crawl(prevState,x,y,0,-1), //up
+              crawl(prevState,x,y,1,-1),
+              crawl(prevState,x,y,1,0), //right
+              crawl(prevState,x,y,1,1),
+              crawl(prevState,x,y,0,1), //down
+              crawl(prevState,x,y,-1,1),
+              crawl(prevState,x,y,-1,0), //left
+              crawl(prevState,x,y,-1,-1),
+            ]
+            return (seenSeats.find(s=>s=='#')?'L':'#')
+          }
+          else if(seat=='#'){
+            let count = 0;
+            const seenSeats = [
+              crawl(prevState,x,y,0,-1), //up
+              crawl(prevState,x,y,1,-1),
+              crawl(prevState,x,y,1,0), //right
+              crawl(prevState,x,y,1,1),
+              crawl(prevState,x,y,0,1), //down
+              crawl(prevState,x,y,-1,1),
+              crawl(prevState,x,y,-1,0), //left
+              crawl(prevState,x,y,-1,-1),
+            ]
+            count = seenSeats.reduce((a,s)=>(s=='#'?a+1:a),0)
+            return count>=5?'L':'#'
+          }
+          else return seat
+        }).join('')
+      }
+    )
+  }while(state.join('\n')!=prevState.join('\n'))
+  return state.join('\n').split('#').length-1
+}
+const crawl = (state,x,y,dX,dY)=>{
+  let seat = null
+  let inc = 1
+  while(!seat){
+    if(!state[y+(dY*inc)])return null
+    const space = state[y+(dY*inc)][x+(dX*inc)]
+    if(space===undefined)return null
+    if(space!='.')seat=space
+    inc++
+  }
+  return seat
+}
 
 module.exports = {part1,part2}
 
