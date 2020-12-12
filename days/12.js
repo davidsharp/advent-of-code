@@ -31,7 +31,43 @@ const part1 = input => {
     else if(/F/.test(inst))move(dir.dir,val)
     else turn(inst,val)
   })
-  return `${x} + ${y} = [${x+y}]`
+  return `${Math.abs(x)} + ${Math.abs(y)} = [${Math.abs(x)+Math.abs(y)}]`
 }
 
-module.exports = {part1}
+const part2 = input => {
+  const insts = parse(input)
+  const waypoint = {x:10,y:-1}
+  const ship = {x:0,y:0}
+  const move = (dir,dist) => {
+    if(dir=='N')waypoint.y-=dist
+    if(dir=='E')waypoint.x+=dist
+    if(dir=='S')waypoint.y+=dist
+    if(dir=='W')waypoint.x-=dist
+  }
+  const moveShip = times => {
+    while(times){
+      ship.x+=waypoint.x
+      ship.y+=waypoint.y
+      times--
+    }
+  }
+  const turn = (dir,deg) => {
+    let turns = deg/90
+    while(turns){
+      let {x,y} = waypoint
+      if(dir=='L')x=-x
+      if(dir=='R')y=-y
+      waypoint.x=y
+      waypoint.y=x
+      turns--
+    }
+  }
+  insts.forEach(({inst,val})=>{
+    if(/N|E|S|W/.test(inst))move(inst,val)
+    else if(/F/.test(inst))moveShip(val)
+    else turn(inst,val)
+  })
+  return `${Math.abs(ship.x)} + ${Math.abs(ship.y)} = [${Math.abs(ship.x)+Math.abs(ship.y)}]`
+}
+
+module.exports = {part1,part2}
