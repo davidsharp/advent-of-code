@@ -23,7 +23,10 @@ const part1 = input => {
 }
 
 const part2 = input => {
-  const buses = parse2(input)
+  const _buses = parse2(input)
+  const longestRoute = _buses.sort((a,b)=>a.id>b.id?-1:1)[0]
+  console.log('longest route :::',longestRoute)
+  const buses = _buses.map(({id,offset})=>({id,offset:offset-longestRoute.offset}))
   let timestamp = buses[0].id
   let result = null
   //console.log(buses)
