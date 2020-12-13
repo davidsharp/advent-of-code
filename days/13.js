@@ -25,8 +25,8 @@ const part1 = input => {
 const part2 = input => {
   const buses = parse2(input)
   console.log('Buses :::',buses)
-  let {start:timestamp,coprime} = buses.slice(1).reduce(({start,coprime,buses},bus)=>{
-    let timestamp = start
+  let {start:timestamp} = buses.slice(1).reduce(({start,coprime,buses},bus)=>{
+    let timestamp = start+coprime
     let found = false
     buses.push(bus)
     console.log('---\nStarting from :::',start,'multiplyer :::',coprime)
@@ -48,8 +48,7 @@ const part2 = input => {
     coprime:buses[0].id,
     buses:[buses[0]]
   })
-  console.log(timestamp,coprime)
-  return timestamp + coprime
+  return timestamp
 }
 
 /*
