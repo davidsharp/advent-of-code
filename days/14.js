@@ -26,11 +26,11 @@ const part1 = input => {
     }
     else {
       let value = inst.value;
-      console.log(value)
       currMask.forEach(digit=>{
         const [pos,expected] = digit
-        if((value>>>pos)%2!=expected){
-          console.log((value>>>pos).toString(2),(value>>>pos)%2,expected)
+        const valueBinary = value.toString(2)
+        const checkDigit = Number(valueBinary[valueBinary.length-1-pos])
+        if(checkDigit!==expected){
           if(expected==1){
             console.log('expected 1 :::',value,pos,2**pos)
             value+=(2**pos)
@@ -39,14 +39,11 @@ const part1 = input => {
             console.log('expected 0 :::', value,pos,-(2**pos))
             if(value>=2**pos)value-=(2**pos)
           }
-          console.log(value)
-          if(value<0)console.log('^^^ whoops, made it negative')
         }
       })
       mem[inst.addr]=value
     }
   })
-  console.log(mem)
   return mem.reduce((a,b)=>a+b,0)
 }
 
