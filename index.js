@@ -1,7 +1,7 @@
 // run
-const runDay = (data,day) => {
+const runDay = (data,day,year=2020) => {
   if(parseInt(day)){
-    const dayO = require(`./days/${parseInt(day)}`)
+    const dayO = require(`./${year}/days/${day}`)
     if(dayO){
       if(dayO.part1){
         console.log(`running day ${day} part 1`);
