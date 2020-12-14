@@ -3,7 +3,7 @@ const parse = input => {
   return instructions.map(i=>{
     const addr = i.match(/mem\[([0-9]*)\]/)
     if(addr){
-      const value = parseInt(i.split(' = ')[1])//,2)
+      const value = parseInt(i.split(' = ')[1])
       return {addr:parseInt(addr[1]),value}
     }
     else return {mask: parseMask(i.split(' = ')[1])}
@@ -12,7 +12,7 @@ const parse = input => {
 
 const parseMask = mask => [...mask].reverse().map((digit,i)=>{
     if(digit=='X')return null
-    return [/*2***/i,parseInt(digit)]
+    return [i,parseInt(digit)]
   }).filter(x=>x)
 
 const part1 = input => {
@@ -32,11 +32,9 @@ const part1 = input => {
         const checkDigit = Number(valueBinary[valueBinary.length-1-pos])
         if(checkDigit!==expected){
           if(expected==1){
-            console.log('expected 1 :::',value,pos,2**pos)
             value+=(2**pos)
           }
           else {
-            console.log('expected 0 :::', value,pos,-(2**pos))
             if(value>=2**pos)value-=(2**pos)
           }
         }
