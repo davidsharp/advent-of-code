@@ -11,13 +11,12 @@ const parse = input => {
 }
 
 const parseMask = mask => [...mask].reverse().map((digit,i)=>{
-    if(digit=='X')return null
+    if(digit=='X')return [i,'X']
     return [i,parseInt(digit)]
-  }).filter(x=>x)
+  })
 
 const part1 = input => {
   const instructions = parse(input)
-  console.log(instructions)
   let currMask = null
   const mem = []
   instructions.forEach(inst=>{
@@ -26,7 +25,7 @@ const part1 = input => {
     }
     else {
       let value = inst.value;
-      currMask.forEach(digit=>{
+      currMask.filter(([,d])=>d!='X').forEach(digit=>{
         const [pos,expected] = digit
         const valueBinary = value.toString(2)
         const checkDigit = Number(valueBinary[valueBinary.length-1-pos])
@@ -45,4 +44,6 @@ const part1 = input => {
   return mem.reduce((a,b)=>a+b,0)
 }
 
-module.exports = {part1}
+const part2 = input => {}
+
+module.exports = {part1,part2}
