@@ -1,11 +1,11 @@
 const parse = input => input.split(',').map(Number)
 
-const part1 = input => {
+const solution = solveForTurn => input => {
   const startingNos = parse(input)
   const spoken = new Map()
   let lastSpoken = null
   let count = 0
-  while(count<2020){
+  while(count<solveForTurn){
     if(count<startingNos.length){
       if(lastSpoken!==null)spoken.set(lastSpoken,count)
       lastSpoken=startingNos[count]
@@ -26,4 +26,7 @@ const part1 = input => {
   return lastSpoken
 }
 
-module.exports = {part1}
+const part1 = solution(2020)
+const part2 = solution(30_000_000)
+
+module.exports = {part1,part2}
