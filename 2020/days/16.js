@@ -32,4 +32,25 @@ const part1 = input => {
   return invalidFields.reduce((a,b)=>a+b,0)
 }
 
-module.exports = {part1}
+const part2 = input => {
+  const {rules,myTicket,tickets} = parse(input)
+  const validTickets = tickets.filter(ticket=>{
+    return ticket.length == ticket.map(field=>{
+      let valid = false
+      for(let i=0;i<rules.length;i++){
+        const [range1,range2] = rules[i][1]
+        if(
+          (field>=range1[0] && field<=range1[1]) ||
+          (field>=range2[0] && field<=range2[1])
+        ) {
+          valid = true
+          break
+        }
+      }
+      return valid
+    }).filter(valid=>valid).length
+  })
+  return validTickets
+}
+
+module.exports = {part1,part2}
