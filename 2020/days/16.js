@@ -4,7 +4,7 @@ const parse = input => {
     rules:rules.split('\n').map(rule=>{
       const [key,value] = rule.split(': ')
       return [key,value.split(' or ').map(range=>range.split('-').map(Number))]
-    }),
+    }),//.filter(rule=>/departure/gi.test(rule[0])),
     myTicket:myTicket.split('\n')[1].split(',').map(Number),
     tickets:tickets.split('\n').slice(1).map(ticket=>ticket.split(',').map(Number))
   }
@@ -50,7 +50,35 @@ const part2 = input => {
       return valid
     }).filter(valid=>valid).length
   })
-  return validTickets
+  let fields = new Array(myTicket.length).fill(false)
+  //while(fields.findIndex(field=>!field)>-1){
+    console.log(fields)
+    fields.forEach((field,i)=>{
+      if(field) return field
+      let matchingField = [];
+      for(let j=0;j<rules.length;j++){
+        //console.log(fields.find(field=>field==rules[j][0]))
+        if(!fields.find(field=>field==rules[j][0])){
+        const [range1,range2] = rules[j][1]
+        isMatchingField = validTickets.reduce((a,ticket)=>(
+          a&&(//console.log(rules[j][0],i,ticket[i],range1,range2,(ticket[i]>=range1[0] && ticket[i]<=range1[1]) ||
+          //(ticket[i]>=range2[0] && ticket[i]<=range2[1])),
+            (ticket[i]>=range1[0] && ticket[i]<=range1[1]) ||
+            (ticket[i]>=range2[0] && ticket[i]<=range2[1])
+          )
+        ),true)
+        if(isMatchingField){
+          matchingField = [...matchingField,rules[j][0]]
+          break;
+        }
+        }
+      }
+      //console.log(matchingField)
+      if(matchingField&&matchingField.length==1)fields[i]=matchingField[0]
+    })
+  //}
+  console.log(fields)
+  return fields.reduce((a,field,i)=>/departure/gi.test(field)?a+myTicket[i]:a,0)
 }
 
 module.exports = {part1,part2}
