@@ -17,10 +17,10 @@ const part1 = input => {
     ticket.forEach(field=>{
       let valid = false
       for(let i=0;i<rules.length;i++){
-        const [range1,range2] = rules[i]
+        const [range1,range2] = rules[i][1]
         if(
-          (field>=range1[0] && field<=range1[1]) &&
-          field>=range2[0] && field<=range2[1]
+          (field>=range1[0] && field<=range1[1]) ||
+          (field>=range2[0] && field<=range2[1])
         ) {
           valid = true
           break
