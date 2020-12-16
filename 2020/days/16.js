@@ -51,32 +51,29 @@ const part2 = input => {
     }).filter(valid=>valid).length
   })
   let fields = new Array(myTicket.length).fill(false)
-  //while(fields.findIndex(field=>!field)>-1){
+  while(fields.findIndex(field=>!field)>-1){
     console.log(fields)
     fields.forEach((field,i)=>{
       if(field) return field
       let matchingField = [];
       for(let j=0;j<rules.length;j++){
-        //console.log(fields.find(field=>field==rules[j][0]))
         if(!fields.find(field=>field==rules[j][0])){
         const [range1,range2] = rules[j][1]
         isMatchingField = validTickets.reduce((a,ticket)=>(
-          a&&(//console.log(rules[j][0],i,ticket[i],range1,range2,(ticket[i]>=range1[0] && ticket[i]<=range1[1]) ||
-          //(ticket[i]>=range2[0] && ticket[i]<=range2[1])),
+          a&&(
             (ticket[i]>=range1[0] && ticket[i]<=range1[1]) ||
             (ticket[i]>=range2[0] && ticket[i]<=range2[1])
           )
         ),true)
         if(isMatchingField){
           matchingField = [...matchingField,rules[j][0]]
-          break;
         }
         }
       }
       //console.log(matchingField)
       if(matchingField&&matchingField.length==1)fields[i]=matchingField[0]
     })
-  //}
+  }
   console.log(fields)
   return fields.reduce((a,field,i)=>/departure/gi.test(field)?a+myTicket[i]:a,0)
 }
