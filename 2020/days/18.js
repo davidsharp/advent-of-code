@@ -7,13 +7,11 @@ const part1 = input => {
 }
 
 const solveProblem = tokens => {
-  //console.log(tokens)
   let total = null;
   let op = null;
   let ignoreDepth = 0;
   let terminated = null;
   tokens.forEach((token,i)=>{
-    //if(ignoreDepth>=0)console.log(token,ignoreDepth,total)
     if(terminated)return;
     if(token=='('){
       if(ignoreDepth==0){
@@ -35,14 +33,8 @@ const solveProblem = tokens => {
   })
   return total
 }
-const plus = (a,b) => (
-  //console.log(`adding ${a}+${b}`),
-  a+b
-)
-const mult = (a,b) => (
-  //console.log(`multing ${a}*${b}`),
-  a*b
-)
+const plus = (a,b) => a+b
+const mult = (a,b) => a*b
 
 const part2 = input => {
   const problems = parse(input)
