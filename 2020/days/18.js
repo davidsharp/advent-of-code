@@ -69,20 +69,18 @@ const solveProblem2 = tokens => {
     else parsedTokens.push(token)
   })
 
-  console.log(parsedTokens)
-
-  //loop and multiply
-  while(parsedTokens.findIndex(x=>x=='*')>-1){
-    const found = parsedTokens.findIndex(x=>x=='*')
-    const multiplied = parsedTokens[found-1]*parsedTokens[found+1]
+  //loop and add
+  while(parsedTokens.findIndex(x=>x=='+')>-1){
+    const found = parsedTokens.findIndex(x=>x=='+')
+    const added = parsedTokens[found-1]+parsedTokens[found+1]
     parsedTokens=[
       ...parsedTokens.slice(0,found-1),
-      multiplied,
+      added,
       ...parsedTokens.slice(found+2)
     ]
   }
-  //loop and add
-  const solved = parsedTokens.join('').split('+').reduce((a,b)=>a+parseInt(b),0)
+  //loop and multiply
+  const solved = parsedTokens.join('').split('*').reduce((a,b)=>a*parseInt(b),1)
 
   return solved
 }
