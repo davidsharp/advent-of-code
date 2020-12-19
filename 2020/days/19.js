@@ -13,10 +13,7 @@ const parse = input => {
 
 const part1 = input => {
   const {rules,messages} = parse(input)
-  console.log(rules)
-  console.log(messages)
   const regex = `^${buildRegex(rules)(0)}$`
-  console.log(regex)
   const matches = messages.map(
     message=>new RegExp(regex).test(message)
   )
@@ -26,7 +23,7 @@ const part1 = input => {
 const buildRegex = rules => key => {
   const rule = rules.get(key)
   if(rule[0].char)return rule[0].char
-  const subrules = rule.map(subrule=>/*subrule.char||*/subrule.pointers.map(p=>buildRegex(rules)(p)).join(''))
+  const subrules = rule.map(subrule=>subrule.pointers.map(p=>buildRegex(rules)(p)).join(''))
   return `(${subrules.join('|')})`
 }
 
