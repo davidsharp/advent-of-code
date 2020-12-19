@@ -33,7 +33,6 @@ const part2 = input => {
   const matches = messages.map(
     message=>(new RegExp(regex).test(message))?message:false
   ).filter(x=>x)
-  console.log(matches)
   return matches.length
 }
 
