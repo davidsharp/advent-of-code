@@ -20,26 +20,21 @@ const part1 = input => {
   return matches.reduce((a,b)=>a+b,0)
 }
 
-const part2 = input => {
-  const {rules,messages} = parse(input)
-  //rules.set(8,[{pointers:[42]},{pointers:[42,8]}])
-  //rules.set(11,[{pointers:[42,31]},{pointers:[42,11,31]}])
-  //console.log(rules)
-  //console.log(messages)
-  const regex = `^${buildRegex2(rules)(0)}$`
-  //console.log(regex)
-  const matches = messages.map(
-    message=>(new RegExp(regex).test(message))?message:false
-  ).filter(x=>x)
-  console.log(matches)
-  return matches.length
-}
-
 const buildRegex = rules => key => {
   const rule = rules.get(key)
   if(rule[0].char)return rule[0].char
   const subrules = rule.map(subrule=>subrule.pointers.map(p=>buildRegex(rules)(p)).join(''))
   return `(${subrules.join('|')})`
+}
+
+const part2 = input => {
+  const {rules,messages} = parse(input)
+  const regex = `^${buildRegex2(rules)(0)}$`
+  const matches = messages.map(
+    message=>(new RegExp(regex).test(message))?message:false
+  ).filter(x=>x)
+  console.log(matches)
+  return matches.length
 }
 
 const buildRegex2 = rules => key => {
