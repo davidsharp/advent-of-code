@@ -15,15 +15,19 @@ const part1 = input => {
   const {rules,messages} = parse(input)
   console.log(rules)
   console.log(messages)
-  const bReg = buildRegex(rules)
-  console.log(new RegExp(bReg(0)).test(messages[0]))
-  // contruct a regex from the rules?
+  const regex = `^${buildRegex(rules)(0)}$`
+  console.log(regex)
+  const matches = messages.map(
+    message=>new RegExp(regex).test(message)
+  )
+  return matches.reduce((a,b)=>a+b,0)
 }
 
 const buildRegex = rules => key => {
   const rule = rules.get(key)
-  const subrules = rule.map(subrule=>subrule.char||subrule.pointers.map(p=>buildRegex(rules)(p)))
-  return `(${subrules.flat().join('|')})`
+  if(rule[0].char)return rule[0].char
+  const subrules = rule.map(subrule=>/*subrule.char||*/subrule.pointers.map(p=>buildRegex(rules)(p)).join(''))
+  return `(${subrules.join('|')})`
 }
 
 module.exports = {part1}
