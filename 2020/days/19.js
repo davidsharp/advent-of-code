@@ -49,7 +49,13 @@ const buildRegex2 = rules => key => {
     return `${buildRegex2(rules)(42)}+`
   }
   if(key==11){
-    return `${buildRegex2(rules)(42)}+${buildRegex2(rules)(31)}+`
+    let hackyRegex = [];
+    let x=1;
+    while(x<10){
+      hackyRegex.push(`(${buildRegex2(rules)(42)}{${x}}${buildRegex2(rules)(31)}{${x}})`)
+      x++
+    }
+    return `(${hackyRegex.join('|')})`
   }
   const rule = rules.get(key)
   if(rule[0].char)return rule[0].char
