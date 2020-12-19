@@ -45,8 +45,10 @@ const buildRegex2 = rules => key => {
   if(key==11){
     let hackyRegex = [];
     let x=1;
-    while(x<10){
-      hackyRegex.push(`(${buildRegex2(rules)(42)}{${x}}${buildRegex2(rules)(31)}{${x}})`)
+    const fortytwo = buildRegex2(rules)(42)
+    const thirtyone = buildRegex2(rules)(31)
+    while(x<4){
+      hackyRegex.push(`(${fortytwo}{${x}}${thirtyone}{${x}})`)
       x++
     }
     return `(${hackyRegex.join('|')})`
