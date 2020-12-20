@@ -37,10 +37,10 @@ const flipY = ([top,right,bottom,left]) => ([
 const getSide = (tile,index) => {console.log(tile)
   // top = 0, right = 1, etc
   //get side based on rotation
-  let flippedSides = [...tile.sides]
+  let sides = [...tile.sides]
   if(tile.flippedY){
-    let [top,right,bottom,left] = flippedSides
-    flippedSides = [
+    let [top,right,bottom,left] = sides
+    sides = [
       reverse(bottom),
       reverse(right),
       reverse(top),
@@ -48,15 +48,15 @@ const getSide = (tile,index) => {console.log(tile)
     ]
   }
   if(tile.flippedX){
-    let [top,right,bottom,left] = flippedSides
-    flippedSides = [
+    let [top,right,bottom,left] = sides
+    sides = [
       reverse(top),
       reverse(left),
       reverse(bottom),
       reverse(right)
     ]
   }
-  let side = tile.sides[(4+(index-tile.rotation))%4]
+  let side = sides[(4+(index-tile.rotation))%4]
   // so to get the rightmost side of a tile (with correct orientation) getSide(tile,1)
   return side
 }
@@ -138,9 +138,9 @@ const part1 = input => {
     imageRows.push(imageRow)
   }
 
-  console.log(imageRows.map(row=>row.map(tile=>tile.id)))
+  console.log(imageRows.map(row=>row.map(tile=>[tile.id,getSide(tile,3),getSide(tile,1)])))
 
-  // linked list side matches?!
+  //condense the rows down to get the ends? just need tops and bottoms
 }
 
 /*
