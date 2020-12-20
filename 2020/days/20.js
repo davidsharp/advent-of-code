@@ -34,7 +34,7 @@ const flipY = ([top,right,bottom,left]) => ([
   reverse(top),
   reverse(left)
 ])
-const getSide = (tile,index) => {console.log(tile)
+const getSide = (tile,index) => {
   // top = 0, right = 1, etc
   //get side based on rotation
   let sides = [...tile.sides]
@@ -64,7 +64,7 @@ const getSide = (tile,index) => {console.log(tile)
 const part1 = input => {
   let tilePool = parse(input)
 
-  console.log(tilePool)
+  //console.log(tilePool)
 
   const imageRows = []
   // while tilePool has tiles?
@@ -72,12 +72,16 @@ const part1 = input => {
   while(tilePool.length){
     const initialTile = tilePool.pop()
     const imageRow = [initialTile]
-    tilePool.forEach((tile,i)=>{
-      console.log(i,imageRow[imageRow.length-1])
+    let noneFound = false
+    while(!noneFound){
+      noneFound = true
+      tilePool.forEach((tile,i)=>{
+      console.log(tile.id,imageRow.map(tile=>tile.id))
       const toMatch = reverse(getSide(imageRow[imageRow.length-1],1))
       //^ reversed so r matches our l, sides run counter to each other
       // also try leftmost
       const secondaryToMatch = reverse(getSide(imageRow[0],3))
+
       let found = null
       let foundSecondary = null
       for(const s of [0,1,2,3]){
@@ -133,8 +137,12 @@ const part1 = input => {
       if(found||foundSecondary){
         //remove this tile from pool
         tilePool=tilePool.filter(t=>t.id!=tile.id)
-      }
-    })
+        noneFound=false
+        console.log('found match',tile.id)
+      }else{console.log('none found',tile.id)}
+        console.log(noneFound)
+      })
+    }
     imageRows.push(imageRow)
   }
 
