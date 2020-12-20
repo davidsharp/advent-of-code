@@ -76,7 +76,7 @@ const part1 = input => {
     while(!noneFound){
       noneFound = true
       tilePool.forEach((tile,i)=>{
-      console.log(tile.id,imageRow.map(tile=>tile.id))
+      //console.log(tile.id,imageRow.map(tile=>tile.id))
       const toMatch = reverse(getSide(imageRow[imageRow.length-1],1))
       //^ reversed so r matches our l, sides run counter to each other
       // also try leftmost
@@ -138,18 +138,90 @@ const part1 = input => {
         //remove this tile from pool
         tilePool=tilePool.filter(t=>t.id!=tile.id)
         noneFound=false
-        console.log('found match',tile.id)
-      }else{console.log('none found',tile.id)}
-        console.log(noneFound)
+        //console.log('found match',tile.id)
+      }//else{console.log('none found',tile.id)}
+        //console.log(noneFound)
       })
     }
     imageRows.push(imageRow)
   }
 
-  console.log(imageRows.map(row=>row.map(tile=>[tile.id,getSide(tile,3),getSide(tile,1)])))
+  console.log(imageRows)
 
-  //condense the rows down to get the ends? just need tops and bottoms
+  //same again but for rows
+  let rowPool = [...imageRows]
+  let image = null
+  const initialRow = rowPool.shift()
+  image = [initialRow]
+  while(rowPool.length){
+    rowPool.forEach((row)=>{
+      // match for a row below
+      const toMatch = reverse(getRowBottom(image[image.length-1]))
+      // and match for one above
+      const secondaryToMatch = reverse(getRowTop(image[0]))
+
+      let found = null
+      let foundSecondary = null
+
+      //console.log(row)
+      let top = getRowTop(row)
+      let bottom = getRowBottom(row)
+
+      //checking it can go on the bottom
+      if(top==toMatch){
+        //top of this row fits on bottom of image
+          found = row
+      } else if(reverse(top)==toMatch){
+        //top fits, but reversed
+          found = rowFlipX(row)
+      } else if(bottom==toMatch){
+        //bottom fits to bottom of image
+          found = rowRotate180(row)
+      } else if(reverse(bottom)==toMatch){
+        //bottom fits, but reversed
+          found = rowFlipY(row)
+      }
+      // checking if it can go on top
+      else if(bottom==secondaryToMatch){
+        // bottom of this row fits on top of image
+          foundSecondary = row
+      } else if(reverse(bottom)==secondaryToMatch){
+        // bottom fits, but reversed
+          foundSecondary = rowFlipX(row)
+      } else if(top==secondaryToMatch){
+        // top fits to top of image
+          foundSecondary = rowRotate180(row)
+      } else if(reverse(top)==secondaryToMatch){
+        // top fits, but reversed
+          foundSecondary = rowFlipY(row)
+      }
+
+      //if found
+      if(found)image.push(found)
+      if(foundSecondary)image.unshift(foundSecondary)
+      if(found||foundSecondary){
+        //remove this row from pool
+        rowPool=rowPool.filter(_row=>_row.findIndex(tile=>row[0].id==tile.id)==-1)
+      }
+      })
+  }
+
+  //console.log(image.map(row=>row.map(tile=>tile.id)))
+
+  const corners = [
+    image[0][0],image[0][image[0].length-1],
+    image[image.length-1][0],image[image.length-1][image[0].length-1],
+  ].map(tile=>tile.id)
+
+  console.log(corners)
+  return corners.reduce((a,b)=>a*b,1)
 }
+
+const getRowTop = row => row.map(tile=>getSide(tile,0)).join('')
+const getRowBottom = row => [...row].reverse().map(tile=>getSide(tile,2)).join('')
+const rowRotate180 = row => [...row].reverse().map(tile=>({rotation:(tile.rotation+2)%4,...tile}))
+const rowFlipX = row => [...row].reverse().map(tile=>({flippedX:!tile.flippedX,...tile}))
+const rowFlipY = row => row.map(tile=>({flippedY:!tile.flippedY,...tile}))
 
 /*
  0
