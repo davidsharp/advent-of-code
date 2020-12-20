@@ -9,6 +9,7 @@ const parse = input => {
     return {
       id:id.match(/Tile ([0-9]+):/i)[1],
       sides:[top,right,bottom,left],
+      matches:[null,null,null,null],
       rows, // split or leave as strings?
       rotation:0,
       flippedX:false,
@@ -17,9 +18,33 @@ const parse = input => {
   })
 }
 
-const flipRow = row => row.split('').reverse().join('')
-
-const matchSides = tile => {} //
+// attempt 2! this time match all
+const part1 = input => {
+  let tiles = parse(input)
+ 
+  tiles.forEach(tileA=>{
+    tiles.forEach(tileB=>{
+     if(tileA==tileB)return;
+     for(const sA of [0,1,2,3]){
+       if(tileA.matches[sA])continue;
+       for(const sB of [0,1,2,3]){
+         if(tileA.sides[sA]==tileB.sides[sB]){
+           tileA.matches[sA]=tileB.id
+           tileB.matches[sB]=tileA.id
+           break
+         }
+         else if(tileA.sides[sA]==reverse(tileB.sides[sB])){
+           tileA.matches[sA]=tileB.id
+           tileB.matches[sB]=tileA.id
+         }}
+     }
+    })
+  })
+  console.log(tiles)
+  const corners = tiles.filter(tile=>tile.matches.filter(x=>x).length==2)
+  console.log(corners.map(corner=>corner.id))
+  return corners.map(corner=>corner.id).reduce((a,b)=>a*b,1)
+ }
 
 const reverse = str => str.split('').reverse().join('')
 const flipX = ([top,right,bottom,left]) => ([
@@ -61,10 +86,10 @@ const getSide = (tile,index) => {
   return side
 }
 
-const part1 = input => {
+const xpart1 = input => {
   let tilePool = parse(input)
 
-  //console.log(tilePool)
+  console.log(tilePool.length)
 
   const imageRows = []
   // while tilePool has tiles?
@@ -154,6 +179,7 @@ const part1 = input => {
   const initialRow = rowPool.shift()
   image = [initialRow]
   while(rowPool.length){
+    //console.log(rowPool.length)
     rowPool.forEach((row)=>{
       // match for a row below
       const toMatch = reverse(getRowBottom(image[image.length-1]))
