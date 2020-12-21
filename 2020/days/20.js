@@ -18,10 +18,7 @@ const parse = input => {
   })
 }
 
-// attempt 2! this time match all
-const part1 = input => {
-  let tiles = parse(input)
- 
+const matchTiles = tiles => {
   tiles.forEach(tileA=>{
     tiles.forEach(tileB=>{
      if(tileA==tileB)return;
@@ -40,13 +37,99 @@ const part1 = input => {
      }
     })
   })
-  console.log(tiles)
+
+  return tiles
+}
+
+// attempt 2! this time match all
+const part1 = input => {
+  let tiles = parse(input)
+  tiles = matchTiles(tiles)
   const corners = tiles.filter(tile=>tile.matches.filter(x=>x).length==2)
-  console.log(corners.map(corner=>corner.id))
   return corners.map(corner=>corner.id).reduce((a,b)=>a*b,1)
- }
+}
+
+const part2 = input => {
+  let tiles = matchTiles(parse(input))
+  const corners = tiles.filter(tile=>tile.matches.filter(x=>x).length==2)
+  const initialTile = corners.find(corner=>{
+    const [top,,,left] = corner.matches
+    return top==null&&left==null // "top left" corner
+  })
+  console.log(initialTile)
+  tiles=tiles.reduce((o,tile)=>({...o,[tile.id]:tile}),{})
+  let tile = initialTile
+  let next = tiles[tile.matches[2]]
+  let rows = []
+  while(next){
+    let rot = 0
+    while(
+      // (0+rot)%4, as looking for top
+      !(tile.sides[2]!=next.sides[rot%4] ||
+      tile.sides[2]!=reverse(next.sides[rot%4]))
+    ){
+      rot=(rot+1)%4
+    }
+    next.rotation=rot%4
+    if(tile.sides[2]==(next.sides[rot%4])){
+      // is backwards, so flipX
+      next.flippedX=!tile.flippedX
+    }
+
+    rows.push([tile])
+    tile = next
+    next = tiles[getSideId(next,2)]
+    if(!next)rows.push([tile]) //last row, off-by-one fix
+  }
+  rows=rows.map(row=>{
+    let tile = row[0]
+    let next = tiles[getSideId(tile,1)]
+    while(next){
+      let rot = 0
+      while(
+        // (3+rot)%4, as looking for left
+        !(tile.sides[1]!=next.sides[(3+rot)%4] ||
+        tile.sides[1]!=reverse(next.sides[(3+rot)%4]))
+      ){
+        rot=(rot+1)%4
+      }
+      next.rotation=rot%4
+      if(tile.sides[1]==(next.sides[(3+rot)%4])){
+        // is upside down, so flipY
+        next.flippedY=!tile.flippedY
+      }
+  
+      row.push(tile)
+      tile = next
+      next = tiles[getSideId(next,1)]
+      if(!next)row.push(tile) //last row, off-by-one fix
+    }
+    return row
+  })
+  console.log(rows)
+}
 
 const reverse = str => str.split('').reverse().join('')
+const arrayRotCw = (arr,times=1) => {
+  let temp = [...arr]
+  let count = 0
+  while(count<times){
+    temp = [temp.pop(),...temp]
+    count++
+  }
+  return temp
+}
+const arrayRotAcw = (arr,times=1) => {
+  let temp = [...arr]
+  let count = 0
+  while(count<times){
+    let [head,...rest] = arr
+    temp = [...rest,head]
+    count++
+  }
+  return temp
+}
+
 const flipX = ([top,right,bottom,left]) => ([
   reverse(top),
   reverse(left),
@@ -84,6 +167,34 @@ const getSide = (tile,index) => {
   let side = sides[(4+(index-tile.rotation))%4]
   // so to get the rightmost side of a tile (with correct orientation) getSide(tile,1)
   return side
+}
+const getSideId = (tile,index) => {
+  // rotate first, unlike previous solution
+  // top = 0, right = 1, etc
+  //get side based on rotation
+  let matches = arrayRotCw(tile.matches,tile.rotation)
+  if(tile.flippedY){
+    let [top,right,bottom,left] = matches
+    matches = [
+      bottom,
+      right,
+      top,
+      left
+    ]
+  }
+  if(tile.flippedX){
+    let [top,right,bottom,left] = matches
+    matches = [
+      top,
+      left,
+      bottom,
+      right
+    ]
+  }
+  let match = matches[index]//[(4+(index-tile.rotation))%4]
+  // so to get the rightmost side of a tile (with correct orientation) getSide(tile,1)
+  console.log('match:::',index,match)
+  return match
 }
 
 const xpart1 = input => {
@@ -255,4 +366,4 @@ const rowFlipY = row => row.map(tile=>({flippedY:!tile.flippedY,...tile}))
  2
 */
 
-module.exports = {part1}
+module.exports = {part1,part2}
