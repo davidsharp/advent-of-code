@@ -42,6 +42,8 @@ const recursiveCombat = (player1,player2) => {
   const player1Rounds = new Set()
   const player2Rounds = new Set()
 
+  //console.log(player1,player2)
+
   while(player1.length>0&&player2.length>0){
     //console.log('player 1 :::',player1)
     //console.log('player 2 :::',player2)
@@ -60,7 +62,9 @@ const recursiveCombat = (player1,player2) => {
 
     // turn/length comparison
     if(turn1<=player1.length && turn2<=player2.length){
-      const [,winner] = recursiveCombat([...player1],[...player2])
+      const [,winner] = recursiveCombat(
+        player1.slice(0,turn1),player2.slice(0,turn2)
+      )
       if(winner==1)player1.push(turn1,turn2)
       else player2.push(turn2,turn1)
     } else {
@@ -75,7 +79,7 @@ const recursiveCombat = (player1,player2) => {
 
   winningHand=player1.length>0?player1:player2
 
-  console.log(player1.length>0?'player 1\'s':'player 2\'s','winning hand :::',winningHand)
+  //console.log(player1.length>0?'player 1\'s':'player 2\'s','winning hand :::',winningHand)
   const score = calcScore(winningHand)
 
   return [score,player1.length>0?1:2]
