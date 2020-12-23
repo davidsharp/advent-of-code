@@ -1,5 +1,14 @@
 const parse = input => input.split('').map(Number)
 
+const getIndex = (array,index) => array[(array.length+index)%array.length]
+
+class Cup {
+  constructor(id,{next=null}={}){
+    this.id = id
+    this.next = next
+  }
+}
+
 const part1 = input => {
   const cups = parse(input)
 
@@ -36,26 +45,6 @@ const takeTurn = ({current,cups}) => {
     current:getIndex(newCups,newCups.indexOf(current)+1),
     cups:newCups
   }
-}
-
-const xpart2 = input => {
-  const tenThru1mil = (new Array(1_000_000-9)).fill(0).map((c,i)=>i+10)
-
-  const cups = parse(input).concat(
-    tenThru1mil
-  )
-
-  let current = cups[0]
-
-  let state = {current,cups}
-
-  const start = performance.now()
-  for(let turn=1;turn<=10_000_000;turn++){
-    if(turn%100==0)console.log('turn',turn,/*state,*/`(${10_000_000-turn} left)`,Math.floor(performance.now()-start)/1000,'seconds')
-    state=takeTurn(state)
-  }
-  let indexOf1 = state.cups.indexOf(1)
-  return getIndex(state.cups,indexOf1+1)*getIndex(state.cups,indexOf1+2)
 }
 
 const part2 = input => {
@@ -105,20 +94,25 @@ const takeTurn2 = ref => current => {
 
 const { performance } = require('perf_hooks');
 
-/*
-The crab picks up the three cups that are immediately clockwise of the current cup. They are removed from the circle; cup spacing is adjusted as necessary to maintain the circle.
-The crab selects a destination cup: the cup with a label equal to the current cup's label minus one. If this would select one of the cups that was just picked up, the crab will keep subtracting one until it finds a cup that wasn't just picked up. If at any point in this process the value goes below the lowest value on any cup's label, it wraps around to the highest value on any cup's label instead.
-The crab places the cups it just picked up so that they are immediately clockwise of the destination cup. They keep the same order as when they were picked up.
-The crab selects a new current cup: the cup which is immediately clockwise of the current cup.
-*/
-
-const getIndex = (array,index) => array[(array.length+index)%array.length]
-
 module.exports = {part1,part2}
 
-class Cup {
-  constructor(id,{next=null}={}){
-    this.id = id
-    this.next = next
+//Would take approx 4 days to complete
+const slowPart2 = input => {
+  const tenThru1mil = (new Array(1_000_000-9)).fill(0).map((c,i)=>i+10)
+
+  const cups = parse(input).concat(
+    tenThru1mil
+  )
+
+  let current = cups[0]
+
+  let state = {current,cups}
+
+  const start = performance.now()
+  for(let turn=1;turn<=10_000_000;turn++){
+    if(turn%100==0)console.log('turn',turn,`(${10_000_000-turn} left)`,Math.floor(performance.now()-start)/1000,'seconds')
+    state=takeTurn(state)
   }
+  let indexOf1 = state.cups.indexOf(1)
+  return getIndex(state.cups,indexOf1+1)*getIndex(state.cups,indexOf1+2)
 }
