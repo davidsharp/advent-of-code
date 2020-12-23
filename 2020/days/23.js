@@ -38,7 +38,7 @@ const takeTurn = ({current,cups}) => {
   }
 }
 
-const part2 = input => {
+const xpart2 = input => {
   const tenThru1mil = (new Array(1_000_000-9)).fill(0).map((c,i)=>i+10)
 
   const cups = parse(input).concat(
@@ -58,6 +58,54 @@ const part2 = input => {
   return getIndex(state.cups,indexOf1+1)*getIndex(state.cups,indexOf1+2)
 }
 
+const part2 = input => {
+  const turns = 10_000_000
+  const tenThru1mil = (new Array(1_000_000-9)).fill(0).map((c,i)=>i+10)
+
+  let cups = parse(input).concat(tenThru1mil).map(cup=>new Cup(cup))
+
+  cups = cups.map((cup,i)=>{
+    cup.next=getIndex(cups,i+1)
+    //cup.prev=getIndex(cups,i-1)
+    return cup
+  })
+
+  const ref = new Map(cups.map(cup=>[cup.id,cup]))
+  console.log(ref.get(1000000))
+  const takeTurn = takeTurn2(ref)
+
+  let current = cups[0]
+
+  const start = performance.now()
+  for(let turn=1;turn<=turns;turn++){
+    if(turns<100||turn%1000==0)console.log('turn',turn,`(${turns-turn} left)`,Math.floor(performance.now()-start)/1000,'seconds')
+    current=takeTurn(current)
+  }
+  console.log(current)
+  return current.next.id * current.next.next.id
+}
+
+const takeTurn2 = ref => current => {
+  let removed = current.next
+  current.next = removed.next.next.next
+
+  let removedIds = [
+    removed.id,
+    removed.next.id,
+    removed.next.next.id
+  ]
+  let destination = current.id
+  do{
+    destination=destination==1?ref.size:destination-1
+  }while(removedIds.indexOf(destination)>-1)
+  const destinationCup = ref.get(destination)
+  const oldDestNext = destinationCup.next
+  destinationCup.next = removed
+  removed.next.next.next = oldDestNext
+
+  return current.next
+}
+
 const { performance } = require('perf_hooks');
 
 /*
@@ -72,7 +120,9 @@ const getIndex = (array,index) => array[(array.length+index)%array.length]
 module.exports = {part1,part2}
 
 class Cup {
-  constructor(id){
-
+  constructor(id,{next=null,prev=null}={}){
+    this.id = id
+    this.next = next
+    this.prev = prev
   }
 }
