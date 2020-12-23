@@ -8,10 +8,9 @@ const part1 = input => {
   let state = {current,cups}
 
   for(let turn=1;turn<=100;turn++){
-    console.log(state)
     state=takeTurn(state)
   }
-  return state
+  return /1\d+1/.exec([...state.cups,...state.cups].join(''))[0].slice(1,-1)
 }
 const takeTurn = ({current,cups}) => {
   let currIdx = cups.indexOf(current)
