@@ -14,12 +14,16 @@ const part1 = input => {
 }
 const takeTurn = ({current,cups}) => {
   let currIdx = cups.indexOf(current)
-  let removed = [...cups,...cups].slice(currIdx+1,currIdx+1+3)
-  let filtered = cups.filter(cup=>removed.indexOf(cup)<0)
+  let removed = currIdx+3<cups.length?
+    cups.slice(currIdx+1,currIdx+4):
+    cups.slice(currIdx+1).concat(cups.slice(0,((currIdx+3)%cups.length)+1))
+  let filtered = currIdx+3<cups.length?
+    cups.slice(0,currIdx+1).concat(cups.slice(currIdx+4)):
+    cups.slice(0,currIdx+1).slice((currIdx+4)%cups.length)
 
   let destination = current
   do{
-    destination = destination==1?9:destination-1
+    destination = destination==1?cups.length:destination-1
   }while(filtered.indexOf(destination)<0)
   let newIdx = filtered.indexOf(destination)
   let newCups = [
@@ -27,10 +31,30 @@ const takeTurn = ({current,cups}) => {
     ...removed,
     ...filtered.slice(newIdx+1)
   ]
+  //console.log(current)
   return {
     current:getIndex(newCups,newCups.indexOf(current)+1),
     cups:newCups
   }
+}
+
+const part2 = input => {
+  const tenThru1mil = (new Array(1_000_000-9)).fill(0).map((c,i)=>i+10)
+
+  const cups = parse(input).concat(
+    tenThru1mil
+  )
+
+  let current = cups[0]
+
+  let state = {current,cups}
+
+  for(let turn=1;turn<=10_000_000;turn++){
+    console.log('turn',turn,/*state,*/`(${10_000_000-turn} left)`)
+    state=takeTurn(state)
+  }
+  let indexOf1 = state.cups.indexOf(1)
+  return getIndex(state.cups,indexOf1+1)*getIndex(state.cups,indexOf1+2)
 }
 
 /*
@@ -42,7 +66,7 @@ The crab selects a new current cup: the cup which is immediately clockwise of th
 
 const getIndex = (array,index) => array[(array.length+index)%array.length]
 
-module.exports = {part1}
+module.exports = {part1,part2}
 
 class Cup {
   constructor(id){
