@@ -66,12 +66,10 @@ const part2 = input => {
 
   cups = cups.map((cup,i)=>{
     cup.next=getIndex(cups,i+1)
-    //cup.prev=getIndex(cups,i-1)
     return cup
   })
 
   const ref = new Map(cups.map(cup=>[cup.id,cup]))
-  console.log(ref.get(1000000))
   const takeTurn = takeTurn2(ref)
 
   let current = cups[0]
@@ -81,7 +79,7 @@ const part2 = input => {
     if(turns<100||turn%1000==0)console.log('turn',turn,`(${turns-turn} left)`,Math.floor(performance.now()-start)/1000,'seconds')
     current=takeTurn(current)
   }
-  console.log(current)
+  current=ref.get(1)
   return current.next.id * current.next.next.id
 }
 
@@ -101,8 +99,7 @@ const takeTurn2 = ref => current => {
   const destinationCup = ref.get(destination)
   const oldDestNext = destinationCup.next
   destinationCup.next = removed
-  removed.next.next.next = oldDestNext
-
+  destinationCup.next.next.next.next = oldDestNext
   return current.next
 }
 
@@ -120,9 +117,8 @@ const getIndex = (array,index) => array[(array.length+index)%array.length]
 module.exports = {part1,part2}
 
 class Cup {
-  constructor(id,{next=null,prev=null}={}){
+  constructor(id,{next=null}={}){
     this.id = id
     this.next = next
-    this.prev = prev
   }
 }
