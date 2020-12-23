@@ -49,13 +49,16 @@ const part2 = input => {
 
   let state = {current,cups}
 
+  const start = performance.now()
   for(let turn=1;turn<=10_000_000;turn++){
-    console.log('turn',turn,/*state,*/`(${10_000_000-turn} left)`)
+    if(turn%100==0)console.log('turn',turn,/*state,*/`(${10_000_000-turn} left)`,Math.floor(performance.now()-start)/1000,'seconds')
     state=takeTurn(state)
   }
   let indexOf1 = state.cups.indexOf(1)
   return getIndex(state.cups,indexOf1+1)*getIndex(state.cups,indexOf1+2)
 }
+
+const { performance } = require('perf_hooks');
 
 /*
 The crab picks up the three cups that are immediately clockwise of the current cup. They are removed from the circle; cup spacing is adjusted as necessary to maintain the circle.
