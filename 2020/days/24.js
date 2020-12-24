@@ -109,8 +109,9 @@ const part2 = input => {
           }
         }
     }
-    console.log(day,':',blackTiles.size)
+    //console.log(day,':',blackTiles.size)
   }
+  return blackTiles.size
 }
 
 module.exports = {part1:input=>part1(input).size,part2}
