@@ -7,15 +7,9 @@ const parse  = input => {
       if(/n|s/.test(letter))letter=letter+letters.shift()
       directions.push(letter)
     }
-    //console.log(directions)
     return directions
   })
 }
-
-/*
-esew
-nwwswee
-*/
 
 const part1 = input => {
   const tileDirections = parse(input)
