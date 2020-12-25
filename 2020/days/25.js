@@ -3,8 +3,21 @@ const parse = input => input.split('\n').map(Number)
 const part1 = input => {
   const [card,door] = parse(input)
   const magicNo = 20201227
-  cardLoops = [1]
-  doorLoops = [1]
+  const cardLoops = [1]
+  //const doorLoops = [1]
+  while(
+    cardLoops[cardLoops.length-1]!=card
+  ){
+    let cardKey = (cardLoops[cardLoops.length-1]*7)%magicNo
+    cardLoops.push(cardKey)
+  }
+  /*
+  while(
+    doorLoops[doorLoops.length-1]!=card
+  ){
+    let doorKey = (doorLoops[doorLoops.length-1]*7)%magicNo
+    doorLoops.push(doorKey)
+  }
   while(
     cardLoops.filter(x=>doorLoops.indexOf(x)>-1).length<2 // 1 is in both
   ){
@@ -13,20 +26,22 @@ const part1 = input => {
 
     cardLoops.push(cardKey)
     doorLoops.push(doorKey)
+  }
+  */
 
-    //console.log(cardLoops,doorLoops)
+  let value = 1;
+  for(let i=1;i<cardLoops.length;i++){
+    value = (value*door)%magicNo
   }
 
-  console.log(cardLoops,doorLoops)
-  
-  const matchingLoops = cardLoops.filter(x=>doorLoops.indexOf(x)>-1)
-  console.log(matchingLoops)
-  return matchingLoops[1]
+  //const matchingLoops = cardLoops.filter(x=>doorLoops.indexOf(x)>-1)
+  //return matchingLoops[1]
+  return value
 }
 
 module.exports = {part1}
 
 /*
-17807724
-5764801
+15335876
+15086442
 */
