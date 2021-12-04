@@ -20,12 +20,20 @@ const part1 = input => {
         ))
       }
     )
-    //if(called == 1)console.log(JSON.stringify(boards,null,2))
 
     boards.forEach(
       (board,i) => {
-        // check columns
-        const winningColumn = null
+        // check columns, bleh
+        let winningColumn = false
+        for(let col = 0; col < 5; col++){
+          if(
+            board[0][col].marked == true &&
+            board[1][col].marked == true &&
+            board[2][col].marked == true &&
+            board[3][col].marked == true &&
+            board[4][col].marked == true
+          ) winningColumn = true
+        }
         // check rows
         const winningRow = board.reduce((acc,line)=>{
           if(acc) return acc;
@@ -36,10 +44,10 @@ const part1 = input => {
     )
   }
 
-  console.log(winner)
 
-  //console.log(numbers)
-  //console.log(JSON.stringify(boards,null,2))
+  const winnerSum = boards[winner].flat(Infinity).filter(num=>!num.marked).reduce(((acc,num)=>acc+num.value),0)
+
+  return winnerSum * numbers[called]
 }
 
 module.exports = {part1}
