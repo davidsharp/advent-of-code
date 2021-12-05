@@ -11,6 +11,7 @@ const runDay = (data,day,year=2021) => {
         console.log(`running day ${day} part 2`);
         runPart(dayO.part2,data)
       }
+      if(!(dayO.part1||dayO.part2)) console.log(`day ${day} has no exported solutions`)
     }
     else console.log('no solution for day '+day)
   } else console.log('no day specified')
