@@ -1,31 +1,18 @@
-class Lanternfish {
-  constructor(pool,timer=8){
-    // refers to the sea, used for birthing
-    this.pool = pool
-    pool.push(this)
-    this.timer = timer
+const runSimulation = (input,days) => {
+  let timerStates = (new Array(9)).fill(0)
+  input.split(',').forEach(f=>timerStates[f]++)
+  for(let i = 0;i<days;i++){
+    const [zeros,...ticked] = timerStates
+    // reset zeros
+    ticked[6]+=zeros
+    // spawn new eights
+    ticked[8]=zeros
+    timerStates = ticked
   }
-  tick(){
-    if(this.timer == 0) this.birth()
-    else this.timer--
-  }
-  birth(){
-    new Lanternfish(this.pool)
-    this.timer = 6
-  }
+  return timerStates.reduce((acc,c)=>acc+c,0)
 }
 
-const part1 = input => {
-  const fishes = []
-  input.split(',').forEach(f=>new Lanternfish(fishes,Number(f)))
-  //console.log(input)
-  for(let i = 0;i<80;i++){
-    fishes.forEach(fish=>fish.tick())
-    //console.log(`Day ${i+1} - ${fishes.map(fish=>fish.timer).join(',')}`)
-  }
-  return fishes.length
-}
+const part1 = input => runSimulation(input,80)
+const part2 = input => runSimulation(input,256)
 
-// went a bit weird with this one
-
-module.exports = {part1}
+module.exports = {part1, part2}
