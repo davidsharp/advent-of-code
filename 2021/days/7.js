@@ -16,16 +16,6 @@ const part1 = input => {
   return lowestFuel
 }
 
-function* fuelCalc(){
-  let cost = 1
-  let step = 1
-  while(true){
-    yield cost
-    step++
-    cost+=step
-  }
-}
-
 const part2 = input => {
   const crabs = input.split(',').map(Number).sort((a,b)=>a-b)
   const min = crabs[0]
@@ -34,10 +24,13 @@ const part2 = input => {
   let lowestFuel = null
   for(let i = min;i<=max;i++){
     const consumes = crabs.reduce((fuel,crab)=>{
-      const calc = fuelCalc()
       let distance = Math.abs(crab-i)
       let cost = 0
-      while(distance-->0)cost=calc.next().value
+      let step = 0
+      while(distance-->0){
+        step++
+        cost+=step
+      }
       return fuel+cost
     },0)
     //console.log(`Position ${i} uses ${consumes}`)
