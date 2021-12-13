@@ -6,7 +6,7 @@ const part1 = input => {
 
 const part2 = input => {
   let [dots, instructions] = parse(input)
-  dots = instructions.reduce((dots,inst)=>followInstruction(dots,inst),dots)
+  dots = instructions.reduce(followInstruction,dots)
   let height = 0
   let width = 0
   let grid = new Set()
