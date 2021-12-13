@@ -9,18 +9,16 @@ const part2 = input => {
   dots = instructions.reduce((dots,inst)=>followInstruction(dots,inst),dots)
   let height = 0
   let width = 0
-  let grid = []
+  let grid = new Set()
   dots.forEach(([x,y])=>{
     if(x>width)width=x
     if(y>height)height=y
-    if(!grid[y])grid[y]=[]
-    grid[y][x]=true
+    grid.add(`${x},${y}`)
   })
-  //console.log(grid.map(row=>row.map(c=>c?'#':'.')).join('\n'))
   let drawnGrid = '\n'
   for(let y = 0;y<=height;y++){
     for(let x = 0;x<=width;x++){
-      drawnGrid+=grid[y][x]?'#':'.'
+      drawnGrid+=grid.has(`${x},${y}`)?'#':'.'
     }
     drawnGrid+='\n'
   }
