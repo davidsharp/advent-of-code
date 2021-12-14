@@ -10,6 +10,18 @@ const parse = input => {
   return [elems, insertionMap]
 }
 
+const parse2 = input => {
+  let [elems, pairInsertions] = input.split('\n\n')
+  // map to an object like:
+  // AB -> C, DE -> F = {AB:C,DE:F}
+  const insertionMap = pairInsertions.split('\n').reduce((acc,pair)=>{
+    const [a,b,c] = pair.replace(' -> ','').split('')
+    acc[`${a}${b}`]=c
+    return acc
+  },{})
+  return [elems, insertionMap]
+}
+
 const run = (input,turns) => {
   let [elems, insertionMap] = parse(input)
 
@@ -37,7 +49,7 @@ const run2 = (input,turns) => {
   let elemCount = [...(new Set(input.replace(/\n| |-|\>/g,'').split('')))]
     .reduce((acc,c)=>(acc[c]=0,acc),{})
   elems.split('').forEach((elem,i)=>{
-    console.log('forEach elem '+i)
+    //console.log('forEach elem '+i)
     elemCount[elem]+=1
     const next = elems[i+1]
     if(next) insert([elem,next],turns,insertionMap,elemCount)
@@ -48,8 +60,38 @@ const run2 = (input,turns) => {
   return elemCount.pop() - elemCount.shift()
 }
 
-const insert = (pair,turns,rules,count) => {
-  const [elem,next] = pair
+const run3 = (input,turns) => {
+  let [elems, insertionMap] = parse2(input)
+  let elemCount = [...(new Set(input.replace(/\n| |-|\>/g,'').split('')))]
+    .reduce((acc,c)=>(acc[c]=0,acc),{})
+  // get the pairs
+  let elemPairCount = input.split('\n\n')[1].split('\n').map(x=>x.split(' ')[0])
+    .reduce((acc,c)=>(acc[c]=0,acc),{})
+
+  elems.split('').forEach((elem,i)=>{
+    console.log('forEach elem '+i)
+    if(!elemPairCount[elem])elemPairCount[elem]=0
+    elemPairCount[elem]+=1
+    const next = elems[i+1]
+    if(next) insert2([elem,next],turns,insertionMap,elemPairCount)
+  })
+
+  elemCount = Object.entries(elemPairCount).reduce((acc,[pair,value])=>{
+    const [elem,next] = pair.split('')
+    // if there's not a next, then it's counted from the template
+    const insert = next?insertionMap?.[`${elem}${next}`]:elem
+    if(insert) elemCount[insert]+=value
+    return elemCount
+  },elemCount)
+
+  //console.log(elemCount)
+
+  elemCount = Object.values(elemCount).sort((a,b)=>a-b)
+
+  return elemCount.pop() - elemCount.shift()
+}
+
+const insert = ([elem,next],turns,rules,count) => {
   const toInsert = rules?.[elem]?.[next]
   if(toInsert && turns){
     count[toInsert]+=1
@@ -58,8 +100,18 @@ const insert = (pair,turns,rules,count) => {
   }
 }
 
-// running both to compare output
-const part1 = input => [run(input,10),run2(input,10)]
-const part2 = input => run2(input,40)
+const insert2 = ([elem,next],turns,rules,count) => {
+  const toInsert = rules?.[`${elem}${next}`]
+  if(toInsert && turns){
+    if(!count[`${elem}${next}`])count[`${elem}${next}`]=0
+    count[`${elem}${next}`]+=1
+    insert2([elem,toInsert],turns-1,rules,count)
+    insert2([toInsert,next],turns-1,rules,count)
+  }
+}
+
+// running all for part 1 to compare output
+const part1 = input => [run(input,10),run2(input,10),run3(input,10)]
+const part2 = input => run3(input,40)
 
 module.exports = {part1,part2}
