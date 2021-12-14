@@ -145,19 +145,18 @@ const run4 = (input,turns) => {
     pairs = newPairs
   }
 
-  console.log(pairs)
+  //console.log(pairs)
 
   elemCount = Object.entries(pairs).reduce((acc,[pair,value])=>{
     const [elem,next] = pair.split('')
-    // if there's not a next, then it's counted from the template
-    const insert = next?insertionMap?.[`${elem}${next}`]:elem
-    if(insert) elemCount[insert]+=value
+    elemCount[elem]+=value
+    elemCount[next]+=value
     return elemCount
   },elemCount)
 
   //console.log(elemCount)
 
-  elemCount = Object.values(elemCount).sort((a,b)=>a-b)
+  elemCount = Object.values(elemCount).map(x=>Math.ceil(x/2)).sort((a,b)=>a-b)
 
   return elemCount.pop() - elemCount.shift()
 }
