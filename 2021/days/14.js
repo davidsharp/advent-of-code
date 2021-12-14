@@ -110,8 +110,60 @@ const insert2 = ([elem,next],turns,rules,count) => {
   }
 }
 
-// running all for part 1 to compare output
-const part1 = input => [run(input,10),run2(input,10),run3(input,10)]
-const part2 = input => run3(input,40)
+const run4 = (input,turns) => {
+  let [elems, insertionMap] = parse2(input)
+  let elemCount = [...(new Set(input.replace(/\n| |-|\>/g,'').split('')))]
+    .reduce((acc,c)=>(acc[c]=0,acc),{})
+
+  let pairs = {}
+  elems.split('').forEach((elem,i)=>{
+    const next = elems[i+1]
+    if(next){
+      if(!pairs[`${elem}${next}`]) pairs[`${elem}${next}`] = 1
+      else pairs[`${elem}${next}`] += 1
+    }
+  })
+
+  while(turns-->0){
+    let newPairs = {}
+    Object.entries(pairs).forEach(
+      ([pair,count]) => {
+        const [a,b] = pair.split('')
+        const toInsert = insertionMap?.[pair]
+        if(toInsert){
+          if(!newPairs[`${a}${toInsert}`]) newPairs[`${a}${toInsert}`] = count
+          else newPairs[`${a}${toInsert}`] += count
+          if(!newPairs[`${toInsert}${b}`]) newPairs[`${toInsert}${b}`] = count
+          else newPairs[`${toInsert}${b}`] += count
+        }
+        else {
+          if(!newPairs[pair]) newPairs[pair] = count
+          else newPairs[pair] += count
+        }
+      }
+    )
+    pairs = newPairs
+  }
+
+  console.log(pairs)
+
+  elemCount = Object.entries(pairs).reduce((acc,[pair,value])=>{
+    const [elem,next] = pair.split('')
+    // if there's not a next, then it's counted from the template
+    const insert = next?insertionMap?.[`${elem}${next}`]:elem
+    if(insert) elemCount[insert]+=value
+    return elemCount
+  },elemCount)
+
+  //console.log(elemCount)
+
+  elemCount = Object.values(elemCount).sort((a,b)=>a-b)
+
+  return elemCount.pop() - elemCount.shift()
+}
+
+// running multiple for part 1 to compare output
+const part1 = input => [run(input,10),run4(input,10)]
+const part2 = input => run4(input,40)
 
 module.exports = {part1,part2}
