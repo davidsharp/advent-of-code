@@ -36,7 +36,61 @@ const crawl = (grid,risk,pos,/*visited=new Set(),*/lowestRisk = Infinity) => {
 const part1 = input => {
   // co-ords accessed backwards like: rows[y][x]
   const grid = input.split('\n').map(row=>row.split('').map(Number))
-  aStar(`0,0`,[grid[0].length-1,grid.length-1].join(','),heuristic(grid),grid)
+  //return aStar(`0,0`,[grid[0].length-1,grid.length-1].join(','),heuristic(grid),grid)
+  return dijkstra(grid)
+}
+
+// literally re-implementing Dijkstra from Wikipedia
+const dijkstra = (grid,source='0,0') => {
+  const Q = new Set()
+
+  const dist = {}
+  const prev = {}
+
+  const height = grid.length
+  const width = grid[0].length
+  for(let x=0;x<width;x++)
+    for(let y=0;y<height;y++){
+      const v = [x,y].join(',')
+      dist[v] = Infinity
+      // prev[v] = undefined
+      Q.add(v)
+    }
+  dist[source] = 0
+  
+  while(Q.size>0){
+    // below should be a k-v tuple
+    const [u] = Object.entries(dist).filter(v=>Q.has(v[0])).sort((a,b)=>a[1]-b[1])[0]
+    Q.delete(u)
+    const [x,y] = u.split(',').map(Number)
+    const neighbours = []
+    if(y+1<grid.length)neighbours.push([x,y+1].join(','));
+    if(x+1<grid[0].length)neighbours.push([x+1,y].join(','));
+    if(y-1>=0)neighbours.push([x,y-1].join(','));
+    if(x-1>=0)neighbours.push([x-1,y].join(','));
+    neighbours.forEach(
+      v => {
+        const [x,y] = v.split(',').map(Number)
+        const alt  = dist[u] + grid[y][x]
+        if(alt < dist[v]){
+          dist[v]=alt
+          prev[v]=u
+        }
+      }
+    )
+  }
+
+  const S = []
+  let u = [width-1,height-1].join(',')
+  while(u){S.unshift(u);u=prev[u]}
+
+  // ignore first square
+  S.shift()
+
+  return S.reduce((acc,coord)=>{
+    const [x,y] = coord.split(',').map(Number)
+    return acc + grid[y][x]
+  },0)
 }
 
 // literally re-implementing A* from Wikipedia
@@ -68,6 +122,7 @@ const aStar = (start,goal,h,grid) => {
       }
     )
   }
+  console.log('failed!')
 }
 const reconstructPath = (cameFrom, current) => {
   const path = [current]
