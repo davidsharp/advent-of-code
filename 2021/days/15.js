@@ -14,11 +14,22 @@ const multipliedGrid = (grid,by=1) => {
   const width = grid[0].length
   return new Proxy(grid,{
     get: (grid,prop) => {
-      if(prop=='height') return height
-      if(prop=='width') return width
+      if(prop=='height') return height * by
+      if(prop=='width') return width * by
       // else treat as co-ordinate
       const [x,y] = prop.split(',').map(Number)
-      return grid[y][x]
+
+      // how many grids over
+      const gridX = Math.floor(x/width)
+      const gridY = Math.floor(y/height)
+
+      let risk = grid[y%height][x%width]
+      let incrementRisk = gridX + gridY
+      while(incrementRisk-->0){
+        if(risk==9)risk=1
+        else risk++
+      }
+      return risk
     }
   })
 }
@@ -74,4 +85,4 @@ const dijkstra = (grid,source='0,0') => {
   },0)
 }
 
-module.exports = {part1}
+module.exports = {part1,part2}
