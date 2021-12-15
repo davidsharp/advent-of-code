@@ -1,48 +1,45 @@
 const part1 = input => {
   // co-ords accessed backwards like: rows[y][x]
   const grid = input.split('\n').map(row=>row.split('').map(Number))
-  return dijkstra(multipliedGrid(grid))
+  return dijkstra(grid)
 }
 const part2 = input => {
   const grid = input.split('\n').map(row=>row.split('').map(Number))
-  return dijkstra(multipliedGrid(grid,5))
+  return dijkstra(grid,5)
 }
 
-const multipliedGrid = (grid,by=1) => {
-  // as a bonus, lets handle string dimensions
+const getRiskHOF = grid => {
   const height = grid.length
   const width = grid[0].length
-  return new Proxy(grid,{
-    get: (grid,prop) => {
-      if(prop=='height') return height * by
-      if(prop=='width') return width * by
-      // else treat as co-ordinate
-      const [x,y] = prop.split(',').map(Number)
 
-      // how many grids over
-      const gridX = Math.floor(x/width)
-      const gridY = Math.floor(y/height)
+  return xy => {
+    const [x,y] = xy.split(',').map(Number)
 
-      let risk = grid[y%height][x%width]
-      let incrementRisk = gridX + gridY
-      while(incrementRisk-->0){
-        if(risk==9)risk=1
-        else risk++
-      }
-      return risk
+    // how many grids over
+    const gridX = Math.floor(x/width)
+    const gridY = Math.floor(y/height)
+
+    let risk = grid[y%height][x%width]
+    let incrementRisk = gridX + gridY
+    while(incrementRisk-->0){
+      if(risk==9)risk=1
+      else risk++
     }
-  })
+    return risk
+  }
 }
 
 // literally re-implementing Dijkstra from Wikipedia
-const dijkstra = (grid,source='0,0') => {
+const dijkstra = (grid,multipliedBy=1,source='0,0') => {
+  const getRisk = getRiskHOF(grid)
+
   const Q = new Set()
 
   const dist = {}
   const prev = {}
 
-  const height = grid.height
-  const width = grid.width
+  const height = grid.length * multipliedBy
+  const width = grid[0].length * multipliedBy
   for(let x=0;x<width;x++)
     for(let y=0;y<height;y++){
       const v = [x,y].join(',')
@@ -64,7 +61,7 @@ const dijkstra = (grid,source='0,0') => {
     if(x-1>=0)neighbours.push([x-1,y].join(','));
     neighbours.forEach(
       v => {
-        const alt  = dist[u] + grid[v]
+        const alt  = dist[u] + getRisk(v)
         if(alt < dist[v]){
           dist[v]=alt
           prev[v]=u
@@ -81,7 +78,7 @@ const dijkstra = (grid,source='0,0') => {
   S.shift()
 
   return S.reduce((acc,coord)=>{
-    return acc + grid[coord]
+    return acc + getRisk(coord)
   },0)
 }
 
