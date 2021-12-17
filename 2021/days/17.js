@@ -1,0 +1,34 @@
+// expected x,y velocities as args
+const part1 = input => {
+  let target = input.split(': ')[1].split(', ')
+  target = target.reduce((acc,a) => {
+    const [d,f,t] = a.split(/=|\.\./)
+    return [...acc,[f,t].map(Number)]
+  },[])
+  let [xVel,yVel] = [...process.argv].pop().split(',').map(Number)
+  //if(!yVel || !xVel)console.log('expects <x>,<y> velocities in args');
+
+  console.log(target)
+
+  let pos = [0,0]
+  let step = 0
+  let hit = false
+  // while less than target max
+  while(pos[0]<target[0][1] && pos[1]>target[1][1]){
+    console.log(`step ${++step}: `, xVel, yVel)
+    pos[0]+=xVel
+    pos[1]+=yVel
+    if(xVel!=0)xVel+=(xVel>0?-1:1)
+    yVel--
+    console.log(pos)
+    if(
+      (pos[0]>=target[0][0] || pos<=target[0][1]) &&
+      (pos[1]>=target[1][0] || pos<=target[1][1])
+    ) {console.log('target hit!');hit = [...pos]}
+  }
+  if(!hit)console.log('target missed')
+
+  return hit
+}
+
+module.exports = {part1}
