@@ -31,4 +31,16 @@ const part1 = input => {
   return hit
 }
 
+/*
+  can use triangular numbers to figure out at what point the x
+  velocity drops to 0 with any given initial velocity
+  and also for calculating increasing drop speed
+
+   5 4 3 2 1 = 5 + (4+1) + (3+2)
+   6 5 4 3 2 1 = 6 + (5+1) + (2+1) + 3
+
+   fn(5) = 5 + (5 * ((5-1)/2))
+*/
+const triangular = x => x + (x * ((x-1)/2))
+
 module.exports = {part1}
