@@ -5,26 +5,28 @@ const part1 = input => {
   const output = numbers.reduce((a,b)=>{
     const added = [a,b]
 
+    let crawled
+
     let complete = false
     while(!complete){
       complete = true
-      const crawl = check(added)
-      console.log(crawl)
-      if(crawl.didExplode||crawl.didReduce) complete = false
-      console.log(JSON.stringify(added))
+      crawled = check(added)
+      console.log('crawled ::: ',crawled)
+      if(crawled.didExplode||crawled.didReduce) complete = false
+      console.log('added :: ',JSON.stringify(added))
     }
 
     return added
   })
 
   // TODO: get magnitude
-  return JSON.stringify(numbers)
+  return JSON.stringify(output)
 }
 
 // mutates the pair
 const check = (pair,depth=0) => {
 
-  console.log('checking pair :::', JSON.stringify(pair))
+  console.log('checking pair :::', JSON.stringify(pair),depth)
 
   // if just a number, return
   if(!Array.isArray(pair)) return {}
@@ -51,12 +53,7 @@ const check = (pair,depth=0) => {
       if(checkLeft.explodedPair){
         const explodedPair = pair[0]
         pair[0]=0
-        // pass left down for next to handle
-        if(depth>0){
-          if(checkLeft.explodedLeft){
-            crawlExplode(pair[0],checkLeft.explodedLeft,0)
-          }
-        }
+        
         // pass right, right
         // if number, add
         if(typeof pair[1] == 'number'){
@@ -64,21 +61,21 @@ const check = (pair,depth=0) => {
         }
         // else crawl up and assign to first left digit
         else crawlExplode(pair[1],value,0);
+
+        // pass left down for next to handle
+        return {didExplode:true,explodedLeft:explodedPair[0]}
       }
+      if(checkLeft.explodedRight){
+        crawlExplode(pair,checkLeft.explodedLeft,0)
+      }
+      if(checkLeft.didExplode) return {didExplode:true}
     }
     if(typeof pair[1] != 'number'){
       const checkRight = check(pair[1],depth+1)
       if(checkRight.didReduce) return {didReduce:true}
-      if(depth>0){
-        if(checkRight.explodedRight){
-          crawlExplode(pair[0],checkRight.explodedRight,0)
-        }
-      }
       if(checkRight.explodedPair){
         const explodedPair = pair[1]
         pair[1]=0
-        // pass right down for next to handle
-        // ...
         // pass left, left
         // if number, add
         if(typeof pair[0] == 'number'){
@@ -86,10 +83,18 @@ const check = (pair,depth=0) => {
         }
         // else crawl up and assign to first right digit
         else crawlExplode(pair[0],value,1);
+
+        // pass right down for next to handle
+        return {didExplode:true,explodedRight:explodedPair[1]}
       }
+      if(checkRight.explodedRight){
+        crawlExplode(pair,checkRight.explodedRight,0)
+      }
+      if(checkRight.didExplode) return {didExplode:true}
     }
 
-    return {completed:true}
+    console.log('done ::: ',JSON.stringify(pair))
+    return pair
   
 }
 const crawlExplode = (pair,value,index) => {
