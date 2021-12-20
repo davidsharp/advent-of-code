@@ -5,11 +5,17 @@ const part1 = input => {
 
   // establishes a "background colour"
   //  based on whatever an empty pixel will equal
+  let background = '.'
+
+
+  // if bg is black, and a black pixel surrounded by black pixels
   const empty = algo[0]
+  // if bg is white, and a white pixel surrounded by white pixels
+  const fullest = algo[algo.length-1]
 
   image=image.split('\n').map(row=>row.split(''))
 
-  console.log('starting image:\n'+image.map(row=>row.join('')).join('\n'))
+  //console.log('starting image:\n'+image.map(row=>row.join('')).join('\n'))
 
   let turns = 2
 
@@ -17,18 +23,24 @@ const part1 = input => {
     // naively, we'll add an empty layer 
     // of pixels around before each run
     image = [
-      Array(image[0].length+2).fill(empty),
-      ...image.map(row=>[empty,...row,empty]),
-      Array(image[0].length+2).fill(empty),
+      Array(image[0].length+2).fill(background),
+      ...image.map(row=>[background,...row,background]),
+      Array(image[0].length+2).fill(background),
     ]
 
     image = image.map(
       (row,y) => row.map((pix,x)=>(
-        algo[readPixel(image,x,y,empty)]
+        algo[readPixel(image,x,y,background)]
       ))
     )
 
-    console.log('image:\n'+image.map(row=>row.join('')).join('\n'))
+    // flip background if needs be
+    if(empty == '#'){ // full flips back
+      if(background == '#') background = '.'
+      else background = '#'
+    }
+
+    //console.log('image:\n'+image.map(row=>row.join('')).join('\n'))
   }
 
   return image.reduce((acc,row)=>row.reduce((_acc,pix)=>_acc+(pix=='#'?1:0),acc),0)
@@ -36,12 +48,16 @@ const part1 = input => {
 }
 
 const readPixel = (image,x,y,bg) => {
-  const notEmpty = bg == '.'?'#':'.'
   let binary = parseInt([
     image?.[y-1]?.[x-1], image?.[y-1]?.[x], image?.[y-1]?.[x+1],
     image?.[y]?.[x-1],   image?.[y]?.[x],   image?.[y]?.[x+1],
     image?.[y+1]?.[x-1], image?.[y+1]?.[x], image?.[y+1]?.[x+1],
-  ].map(bit=>bit==notEmpty?1:0).join(''),2)
+  ].map(bit=>(
+    bit == '#'? 1:
+    bit == '.'? 0:
+    bg  == '#'? 1:
+    /*bg = '.'*/0
+  )).join(''),2)
   return binary
 }
 
