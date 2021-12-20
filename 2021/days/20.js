@@ -7,8 +7,9 @@ const enhance = (input,turns) => {
   //  based on whatever an empty pixel will equal
   let background = '.'
 
-  // if the algo a pixel to white on 0 and black on 0b111111111
-  // then the background flips each turn
+  // if the algo turns a pixel
+  //  to white on 0 and black on 0b111111111
+  //  then the background flips each turn
   const flipEachTurn = algo[0]=='#' && algo[algo.length-1]=='.'
 
   image=image.split('\n').map(row=>row.split(''))
