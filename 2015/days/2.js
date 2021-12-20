@@ -7,4 +7,11 @@ const part1 = input => input.split('\n').map(
   }
 ).reduce((a,b)=>a+b)
 
-module.exports = {part1}
+const part2 = input => input.split('\n').map(
+  present => {
+    const [l,w,h] = present.split('x').map(Number).sort((a,b)=>a-b)
+    return (l*w*h) + l + l + w + w
+  }
+).reduce((a,b)=>a+b)
+
+module.exports = {part1,part2}
