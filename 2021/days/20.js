@@ -3,6 +3,10 @@ const part1 = input => {
   // remove wrapping on example algo
   algo = algo.split('\n').join('')
 
+  // establishes a "background colour"
+  //  based on whatever an empty pixel will equal
+  const empty = algo[0]
+
   image=image.split('\n').map(row=>row.split(''))
 
   console.log('starting image:\n'+image.map(row=>row.join('')).join('\n'))
@@ -13,14 +17,14 @@ const part1 = input => {
     // naively, we'll add an empty layer 
     // of pixels around before each run
     image = [
-      Array(image[0].length+2).fill('.'),
-      ...image.map(row=>['.',...row,'.']),
-      Array(image[0].length+2).fill('.'),
+      Array(image[0].length+2).fill(empty),
+      ...image.map(row=>[empty,...row,empty]),
+      Array(image[0].length+2).fill(empty),
     ]
 
     image = image.map(
       (row,y) => row.map((pix,x)=>(
-        algo[readPixel(image,x,y)]
+        algo[readPixel(image,x,y,empty)]
       ))
     )
 
@@ -31,12 +35,13 @@ const part1 = input => {
 
 }
 
-const readPixel = (image,x,y) => {
+const readPixel = (image,x,y,bg) => {
+  const notEmpty = bg == '.'?'#':'.'
   let binary = parseInt([
     image?.[y-1]?.[x-1], image?.[y-1]?.[x], image?.[y-1]?.[x+1],
     image?.[y]?.[x-1],   image?.[y]?.[x],   image?.[y]?.[x+1],
     image?.[y+1]?.[x-1], image?.[y+1]?.[x], image?.[y+1]?.[x+1],
-  ].map(bit=>bit=='#'?1:0).join(''),2)
+  ].map(bit=>bit==notEmpty?1:0).join(''),2)
   return binary
 }
 
