@@ -1,4 +1,4 @@
-const part1 = input => {
+const enhance = (input,turns) => {
   let [algo,image] = input.split('\n\n')
   // remove wrapping on example algo
   algo = algo.split('\n').join('')
@@ -16,8 +16,6 @@ const part1 = input => {
   image=image.split('\n').map(row=>row.split(''))
 
   //console.log('starting image:\n'+image.map(row=>row.join('')).join('\n'))
-
-  let turns = 2
 
   while(turns-->0){
     // naively, we'll add an empty layer 
@@ -61,4 +59,7 @@ const readPixel = (image,x,y,bg) => {
   return binary
 }
 
-module.exports = {part1}
+const part1 = input => enhance(input,2)
+const part2 = input => enhance(input,50)
+
+module.exports = {part1, part2}
