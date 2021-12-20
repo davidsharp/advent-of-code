@@ -1,4 +1,4 @@
-module.exports = 
+module.exports = {
 // could be tighter, but it works
 part1: data=>{
   const timestamps = data.split('\n').sort()
