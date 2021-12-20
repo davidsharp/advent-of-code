@@ -65,4 +65,6 @@ else return layers+( (cornerDist/2) - (side[0]-n<n-side[1]?side[0]-n:n-side[1]) 
 const createLayer = length => ({values:[],length:length,corners:[],width:0,cornerDist:0})
 // thoughts: initially this had gross loops incrementing round, but then I figured I should do some maths
 
+// NOTE (2021): I never finished 3-2
+
 module.exports = {part1:spiralStepCount,part2:spiralStepCount2}
