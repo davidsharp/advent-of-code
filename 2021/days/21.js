@@ -46,7 +46,7 @@ const part2 = input => {
 
   return playGame(clone(players))
 }
-const playGame = (players,playerTurn=0,rollValue=0,multiplier) => {
+const playGame = (players,playerTurn=0,rollValue=0,multiplier=1) => {
   const boardLength = 10
   const goal = 21
 
@@ -61,7 +61,6 @@ const playGame = (players,playerTurn=0,rollValue=0,multiplier) => {
     if(players[playerTurn].score>=goal)return playerTurn==0?[1,0]:[0,1]
 
     // next turn
-    rollValue = 0
     playerTurn = (playerTurn+1)%2
   }
 
