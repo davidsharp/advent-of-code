@@ -9,4 +9,14 @@ const part1 = input => input.split('\n').map(
   }
 ).reduce((a,c)=>c?a+1:a,0)
 
-module.exports = {part1}
+const part2 = input => input.split('\n').map(
+  pair => {
+    pair = pair.split(',').map(e => e.split('-').map(Number)).sort(
+      // sorting so earliest is first
+      (a,b) => a[0]>b[0]?1:-1
+    )
+    return pair[0][1]>=pair[1][0]
+  }
+).reduce((a,c)=>c?a+1:a,0)
+
+module.exports = {part1, part2}
