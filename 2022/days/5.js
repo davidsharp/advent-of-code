@@ -1,4 +1,4 @@
-const part1 = input => {
+const parse = input => {
   let [stacks,inst] = input.split('\n\n')
   stacks = stacks.split('\n')
   const total = Number(stacks.pop().split(' ').filter(x=>x).pop())
@@ -17,7 +17,13 @@ const part1 = input => {
   },Array(total).fill().map(_=>[]))
 
   inst = inst.split('\n').map(x=>x.split(' ').filter((x,i)=>i%2).map(Number))
-  inst.forEach(
+
+  return {stacks,inst}
+}
+
+const part1 = input => {
+   const {stacks, inst} = parse(input)
+   inst.forEach(
     ([move,frm,to])=>{
       while(move-->0)stacks[to-1].push(stacks[frm-1].pop())
     }
@@ -26,4 +32,17 @@ const part1 = input => {
   return stacks.map(s=>s.pop()).join('')
 }
 
-module.exports = {part1}
+const part2 = input => {
+  const {stacks, inst} = parse(input)
+  inst.forEach(
+    ([move,frm,to])=>{
+      const temp = []
+      while(move-->0)temp.push(stacks[frm-1].pop())
+      while(temp.length>0)stacks[to-1].push(temp.pop())
+    }
+  )
+
+  return stacks.map(s=>s.pop()).join('')
+}
+
+module.exports = {part1,part2}
