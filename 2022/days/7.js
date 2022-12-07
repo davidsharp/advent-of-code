@@ -20,11 +20,9 @@ const part1 = input => {
     }
   )
 
-  console.log(fs)
-
   const sizes = {}
   read(fs,'/',sizes)
-  console.log(sizes)
+
   return Object.entries(sizes).filter(x=>x[1]<=100_000).reduce((a,c)=>a+c[1],0)
 }
 
@@ -33,7 +31,7 @@ const read = (fs,dir,obj) => {
     (a,[file,size]) => a+(size=='dir'?read(fs,`${dir}/${file}`,obj):size)
   ,0)
 
-  obj[dir.split('/').pop()] = size
+  obj[dir] = size
   return size
 }
 
