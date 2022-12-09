@@ -9,7 +9,6 @@ const part1 = input => {
     const axis = /R|L/.test(dir)?0:1
     const mag = /U|L/.test(dir)?-1:1
     h[axis]+=mag
-    console.log('h: ',h)
   }
 
   const follow = () => {
@@ -36,7 +35,6 @@ const part1 = input => {
       t[1] = _t[1]
     }
 
-    console.log('t: ',t)
     visited.add(t.join(','))
   }
 
@@ -44,7 +42,6 @@ const part1 = input => {
     inst => {
       let [dir,by] = inst.split(' ')
       while(by-->0){
-        console.log(dir,by+1)
         move(dir)
         follow()
       }
@@ -65,7 +62,6 @@ const part2 = input => {
     const axis = /R|L/.test(dir)?0:1
     const mag = /U|L/.test(dir)?-1:1
     h[axis]+=mag
-    console.log('h: ',h)
   }
 
   const follow = (h,t) => {
@@ -91,15 +87,12 @@ const part2 = input => {
       t[0] = _t[0]
       t[1] = _t[1]
     }
-
-    console.log('t: ',t)
   }
 
   input.split('\n').forEach(
     inst => {
       let [dir,by] = inst.split(' ')
       while(by-->0){
-        console.log(dir,by+1)
         move(dir)
         knots.forEach(
           (x,i)=>follow(knots[i-1]||h,x)
