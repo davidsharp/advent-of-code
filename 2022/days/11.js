@@ -51,21 +51,21 @@ const part2 = input => {
     }
   )
 
+  const coprime = monkeys.reduce((a,m)=>a*m.test[0],1)
+
   let round = 1
-  while(round<=20/*10_000*/){
+  while(round<=10_000){
     monkeys.forEach(
       m => {
         let items = [...m.items]
         m.items = []
         m.inspections += items.length
-        const n = i => (m.op[1]=='old'?i:m.op[1])
-        items = items.map(i=>(
-          m.op[0] == '+'? i + n(i) : i * n(i)
-        ))
+        items = items.map(i=>{
+            const _i = m.op[1]=='old'?i:m.op[1]
+            return (m.op[0] == '+'? i + _i : i * _i)%coprime
+        })
         items.forEach(
-          i => monkeys[i%m.test[0]==0?m.test[1]:m.test[2]].items.push(
-            i%m.test[0]==0?i/m.test[0]:i
-          )
+          i => monkeys[i%m.test[0]==0?m.test[1]:m.test[2]].items.push(i)
         )
       }
     )
@@ -73,6 +73,7 @@ const part2 = input => {
   }
 
   return monkeys.map(m=>m.inspections)
+    .sort((a,b)=>a>b?-1:1).slice(0,2).reduce((a,c)=>a*c)
 }
 
 module.exports = {part1,part2}
