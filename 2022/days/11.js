@@ -52,29 +52,38 @@ const part2 = input => {
     }
   )
 
+  console.log(JSON.stringify(monkeys,null,2))
+
   let round = 1
-  while(round<=10_000){
+  while(round<=20){
+    if(round%100==0)console.log('round: ',round)
     monkeys.forEach(
       m => {
+        console.log(m)
         let items = [...m.items]
         m.items = []
         m.inspections += items.length
-        items = items.map(i=>((
+        console.log(items)
+        items = items.map(i=>{
+          return [...(
           m.op[1] == 'old' ? (
             m.op[0] == '+' ? double(i) : square(i)
           )
           : m.op[0] == '+'? add(i,m.op[1]) : mult(i,m.op[1])
-        )))
+        )]})
+        console.log(items)
         items.forEach(
-          i => monkeys[mod(i,m.test[0])==0?m.test[1]:m.test[2]].items.push(i)
+          i => {
+            monkeys[mod(i,m.test[0])==0?m.test[1]:m.test[2]].items.push(i)
+          }
         )
       }
     )
+    console.log('round',round,' ',monkeys.map(m=>m.inspections))
     round++
   }
 
-  return monkeys.map(m=>m.inspections)
-    .sort((a,b)=>a>b?-1:1).slice(0,2).reduce((a,c)=>a*c)
+  return monkeys.map(m=>m.inspections).sort((a,b)=>a>b?-1:1)
 }
 
 const add = (num,i) => {
@@ -125,11 +134,12 @@ const massage = num => {
   num.reverse()
   let i = 0
   while(i<num.length){
-    if(num[i]>10){
-      if(!num[i+1]) num.push(Math.floor(num/10))
-      else num[i+1] += Math.floor(num/10)
+    if(num[i]>=10){
+      if(!num[i+1]) num.push(Math.floor(num[i]/10))
+      else num[i+1] += Math.floor(num[i]/10)
       num[i]%=10
     }
+    i++
   }
   num.reverse()
   return num
