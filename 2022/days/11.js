@@ -80,10 +80,19 @@ const add = (num,i) => {
   num[num.length-1] += i
   return massage(num)
 }
-const mult = (num,i) => {}
+const mult = (num,i) => {
+  num = massage(num.map(x=>x*i))
+  return num
+}
+const multX = (num1,num2) => {
+  // todo - take two array numbers, times together
+}
 const mod = (num,i) => {} // long division, grab remainder
-const double = (num) => {}
-const square = (num) => {}
+const double = (num) => {
+  num = massage(num.map(x=>x*2))
+  return num
+}
+const square = (num) => {} // multX shorthand
 const massage = num => {
   num.reverse()
   let i = 0
