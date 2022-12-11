@@ -145,4 +145,12 @@ const massage = num => {
   return num
 }
 
+console.assert(add([3,7],106).join('')==37+106)
+console.assert(mod([3,7],6)==37%6)
+console.assert(mult([3,7],106).join('')==37*106)
+console.assert(multX([3,6],[2,3]).join('')==36*23)
+console.assert(double([1,2,3,4,5,6]).join('')==123456*2)
+console.assert(square([1,2,3,4,5,6]).join('')==123456**2)
+console.log('tests done')
+
 module.exports = {part1,part2}
