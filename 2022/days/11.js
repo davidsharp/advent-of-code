@@ -59,10 +59,11 @@ const part2 = input => {
         let items = [...m.items]
         m.items = []
         m.inspections += items.length
-        const n = i => (m.op[1]=='old'?i:m.op[1])
-        // TODO - if + old, double, if * odl, square
         items = items.map(i=>((
-          m.op[0] == '+'? add(i,n(i)) : mult(i,n(i))
+          m.op[1] == 'old' ? (
+            m.op[0] == '+' ? double(i) : square(i)
+          )
+          : m.op[0] == '+'? add(i,m.op[1]) : mult(i,m.op[1])
         )))
         items.forEach(
           i => monkeys[mod(i,m.test[0])==0?m.test[1]:m.test[2]].items.push(i)
@@ -84,8 +85,23 @@ const mult = (num,i) => {
   num = massage(num.map(x=>x*i))
   return num
 }
-const multX = (num1,num2) => {
-  // todo - take two array numbers, times together
+const multX = (num1,num2) => { //multiply arrays
+  const w = num1.length
+  const h = num2.length
+  let grid = Array(w).fill(0).map(_=>Array(h).fill(0))
+  grid = grid.map(
+    (x,i) => x.map((y,j)=>num1[i]*num2[j])
+  )
+  const newNum = []
+  for(let x = 0;x<w;x++){
+    for(let y = 0;y<h;y++){
+      newNum[x+y] = (newNum[x+y]||0) + grid[w-1-x][h-1-y]
+    }
+  }
+
+  newNum.reverse()
+
+  return massage(newNum)
 }
 const mod = (num,i) => {
   //const q/*uotient*/ = Array(num.length).fill(0)
@@ -104,7 +120,7 @@ const double = (num) => {
   num = massage(num.map(x=>x*2))
   return num
 }
-const square = (num) => {} // multX shorthand
+const square = (num) => multX(num,num) // multX shorthand
 const massage = num => {
   num.reverse()
   let i = 0
