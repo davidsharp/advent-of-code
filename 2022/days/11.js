@@ -87,7 +87,19 @@ const mult = (num,i) => {
 const multX = (num1,num2) => {
   // todo - take two array numbers, times together
 }
-const mod = (num,i) => {} // long division, grab remainder
+const mod = (num,i) => {
+  //const q/*uotient*/ = Array(num.length).fill(0)
+  let r = 0
+  num.forEach(
+    (n,ind) => {
+      //q[ind]=Math.floor(((r*10)+n)/i)
+      r = ((r*10)+n)%i
+    }
+  )
+
+  return r
+  //return Number(q.join(''))
+} // long division, grab remainder
 const double = (num) => {
   num = massage(num.map(x=>x*2))
   return num
