@@ -9,10 +9,7 @@ const part1 = input => {
     return r
   })
 
-  console.log(grid)
-  console.log(S)
-
-  return crawl(grid, S)
+  return crawl(grid, S).size
 }
 
 const crawl = (grid, pos, _set = []) => {
@@ -22,8 +19,6 @@ const crawl = (grid, pos, _set = []) => {
   const set = new Set([..._set])
   set.add(pos.join(','))
 
-  console.log(set)
-
   const current = grid[y][x]=='S'?1:grid[y][x]
 
   let attempts = []
@@ -32,7 +27,7 @@ const crawl = (grid, pos, _set = []) => {
     if (grid[y][x + 1] == 'E') { return set }
     else if (grid[y][x + 1] != 'S' && (current + 1) >= grid[y][x + 1]) {
       let a = crawl(grid, [x + 1, y], set)
-      if (a && a.size + set.size == new Set([...a, ...set])){
+      if (a){ //&& a.size + set.size == new Set([...a, ...set])){
           attempts.push(new Set([...a, ...set]))
       }
     }
@@ -42,7 +37,7 @@ const crawl = (grid, pos, _set = []) => {
     if (current == 26 && grid[y - 1][x] == 'E') { return set }
     else if (grid[y - 1][x] != 'S' && (current + 1) >= grid[y - 1][x]) {
       let a = crawl(grid, [x, y - 1], set)
-      if (a && a.size + set.size == new Set([...a, ...set])){
+      if (a){ //&& a.size + set.size == new Set([...a, ...set])){
           attempts.push(new Set([...a, ...set]))
       }
     }
@@ -52,7 +47,7 @@ const crawl = (grid, pos, _set = []) => {
     if (current == 26 && grid[y + 1][x] == 'E') { return set }
     else if (grid[y + 1][x] != 'S' && (current + 1) >= grid[y + 1][x]) {
       let a = crawl(grid, [x, y + 1], set)
-      if (a && a.size + set.size == new Set([...a, ...set])){
+      if (a){ //&& a.size + set.size == new Set([...a, ...set])){
           attempts.push(new Set([...a, ...set]))
       }
     }
@@ -62,7 +57,7 @@ const crawl = (grid, pos, _set = []) => {
     if (current == 26 && grid[y][x - 1] == 'E') { return set }
     else if (grid[y][x - 1] != 'S' && (current + 1) >= grid[y][x - 1]) {
       let a = crawl(grid, [x - 1, y], set)
-      if (a && a.size + set.size == new Set([...a, ...set])){
+      if (a){ //&& a.size + set.size == new Set([...a, ...set])){
           attempts.push(new Set([...a, ...set]))
       }
     }
