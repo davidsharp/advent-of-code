@@ -1,10 +1,3 @@
-const part1 = input => input.split('\n\n').map(
-  pair => {
-    const [l,r] = pair.split('\n').map(JSON.parse)
-    return compare(l,r)
-  }
-).reduce((a,c,i)=>c?a+i+1:a,0)
-
 const compare = (left,right)=>{
   let l = left
   let r = right
@@ -25,8 +18,20 @@ const compare = (left,right)=>{
     if(c!='=')return c
     i++
   }
-  // r was longer
-  return true
+  // r was longer?
+  return r.length>l.length?true:'='
 }
 
-module.exports = {part1}
+const part1 = input => input.split('\n\n').map(
+  pair => {
+    const [l,r] = pair.split('\n').map(JSON.parse)
+    return compare(l,r)
+  }
+).reduce((a,c,i)=>c?a+i+1:a,0)
+
+const part2 = input => [[[2]],[[6]],...input.split('\n\n').map(
+  pair => pair.split('\n').map(JSON.parse)
+).flat()].sort((a,b)=>compare(a,b)?-1:1).map(JSON.stringify)
+.reduce((a,c,i)=>/^\[\[(2|6)\]\]$/.test(c)?a*(i+1):a,1)
+
+module.exports = {part1,part2}
