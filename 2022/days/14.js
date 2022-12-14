@@ -1,4 +1,4 @@
-const part1 = input => {
+const scan = input => {
   const lines = input.split('\n').map(l=>l.split(' -> ').map(p=>p.split(',').map(Number)))
   const points = new Set()
   let lowest = 0
@@ -21,6 +21,12 @@ const part1 = input => {
     }
   })
 
+  return {points, lowest}
+}
+
+const part1 = input => {
+  const {points,lowest} = scan(input)
+
   let sandCount = 0
   let sand = {x:500,y:0}
   while(sand.y<lowest){
@@ -40,4 +46,28 @@ const part1 = input => {
   return sandCount
 }
 
-module.exports = {part1}
+const part2 = input => {
+  const {points,lowest} = scan(input)
+
+  const base = lowest+2
+
+  let sandCount = 0
+  let sand = {x:500,y:-1} // hack for checking if blocked
+  while(!points.has('500,0')){
+    if(sand.y+1!=base && !points.has([sand.x,sand.y+1].join(',')))
+      sand.y++
+    else if(sand.y+1!=base && !points.has([sand.x-1,sand.y+1].join(',')))
+      {sand.y++;sand.x--}
+    else if(sand.y+1!=base && !points.has([sand.x+1,sand.y+1].join(',')))
+      {sand.y++;sand.x++}
+    else {
+      points.add([sand.x,sand.y,].join(','))
+      sandCount++
+      sand = {x:500,y:-1}
+    }
+  }
+
+  return sandCount
+}
+
+module.exports = {part1,part2}
