@@ -15,8 +15,6 @@ const part1 = input => {
     }
   )
 
-  //console.log(sensors)
-
   const row = 2_000_000
   let x = lowX
   let impCount = 0
@@ -29,7 +27,6 @@ const part1 = input => {
         else if(s.dist>=mDist(s.x,s.y,x,row)) r = true
       }
     )
-    //console.log(x,r?'#':b?'B':'.')
     if(r && !b) impCount++
     x++
   }
