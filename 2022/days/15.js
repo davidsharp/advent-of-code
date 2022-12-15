@@ -54,13 +54,17 @@ const part2 = input => {
     while(x<=highX && !found){
       let b = false // found beacon
       let r = false // reached by sensor
-      sensors.forEach(
-        s => {
-         if(s.beacon[0]==x&&s.beacon[1]==y) b = true
-         else if(s.dist>=mDist(s.x+1,s.y+1,x+1,y+1)) r = true
-       }
-      )
-      if(!r && !b) found=[x,y]
+      let i = 0
+      while(i<sensors.length && !r){
+        const s = sensors[i]
+          const diff = s.dist>=mDist(s.x+1,s.y+1,x+1,y+1)
+          if(diff) {
+            r = true
+            if(s.x-x>0) x += s.x-x
+          }
+        i++
+      }
+      if(!r) found=[x,y]
       x++
     }
     x=0
