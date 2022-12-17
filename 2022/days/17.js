@@ -24,11 +24,11 @@ const part1 = pattern => {
   let rIndex = 0
   let jIndex = 0
   const setRocks = new Set()
-  while(count<2022){console.log(count)
+  while(count<2022){
     const r = rocks[rIndex%5]
     let x = 2
     let y = h + 3 //bottom of rock from the floor
-    console.log(r)
+    //console.log(r)
     let landed = false
     while(!landed){
       //console.log(x,y)
@@ -47,10 +47,12 @@ const part1 = pattern => {
         })
         if(!hit)x+=d
       }
+      //console.log(d==1?'>':'<',x)
       // else no-op
       jIndex++
       //move down
       let hit = false
+      let moved = false
       if(y>0){
         // rock check
         r.forEach((row,i)=>{
@@ -60,9 +62,12 @@ const part1 = pattern => {
             }
           })
         })
-        if(!hit)y--
+        if(!hit){
+          y--
+          moved = true
+        }
       }
-      if(y<=0 || hit) {
+      if(!moved || hit) {
         landed = true
         r.forEach((row,i)=>{
           [...row].forEach((cell,ii)=>{
