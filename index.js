@@ -1,6 +1,6 @@
 const {readFile} = require('fs/promises')
 
-const thisYear = 2022
+const thisYear = (new Date()).getFullYear()
 
 // run
 const run = async () => {
