@@ -9,8 +9,8 @@ const replace = str => {
   const new_str = str
   const temp = []
   nums.forEach((re,i)=>{
-    const idx = new_str.search(re)
-    if(idx>=0) temp.push([idx,i+1])
+    const idx = [...new_str.matchAll(re)].map(({index})=>index)
+    idx.forEach(_idx => temp.push([_idx,i+1]))
   })
   const new_nums = new_str.split('')
   temp.forEach(([idx,val])=> new_nums[idx] = String(val))
