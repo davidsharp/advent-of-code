@@ -7,13 +7,12 @@ const part1 = input => input.split('\n').map(
 const nums = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'].map(x=>new RegExp(x, "g"))
 const part2 = input => input.split('\n').map(
   str => {
-    const new_str = str
     const temp = []
     nums.forEach((re,i)=>{
-      const idx = [...new_str.matchAll(re)].map(({index})=>index)
+      const idx = [...str.matchAll(re)].map(({index})=>index)
       idx.forEach(_idx => temp.push([_idx,i+1]))
     })
-    const new_nums = new_str.split('')
+    const new_nums = str.split('')
     temp.forEach(([idx,val])=> new_nums[idx] = String(val))
     return new_nums.filter(Number)
   }
