@@ -45,6 +45,7 @@ const part2 = input => {
     (row,i) => {
       const cols = [...row]
       let current_num = ''
+      let current_num_id = 0
       let seen_gears = new Set()
       for(let j = 0;j < cols.length;j++){
         if(Number(cols[j]) > -1){ // test for NaN vs 0
@@ -63,10 +64,11 @@ const part2 = input => {
           if(current_num)seen_gears.forEach(
             gear => {
               if(!gears[gear]) gears[gear] = new Set()
-              gears[gear].add(current_num)
+              gears[gear].add([current_num,current_num_id].join())
             }
           )
           current_num = ''
+          current_num_id++
           seen_gears = new Set()
         }
       }
@@ -74,12 +76,14 @@ const part2 = input => {
       if(current_num)seen_gears.forEach(
         gear => {
           if(!gears[gear]) gears[gear] = new Set()
-          gears[gear].add(current_num)
+          gears[gear].add([current_num,current_num_id].join())
         }
       )
     }
   )
-  return Object.values(gears).filter(gear=>gear.size==2).map(gear=>[...gear]).reduce((acc,[a,b])=>acc+(a*b),0)
+  return Object.values(gears).filter(gear=>gear.size==2).map(gear=>[...gear]).reduce(
+    (acc,[a,b])=>acc+(Number(a.split(',')[0])*Number(b.split(',')[0]))
+  ,0)
 }
 
 module.exports = { part1, part2 }
