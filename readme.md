@@ -11,3 +11,4 @@ I've been doing them since 2017, and typically I manage about half a month. I te
 * 2021: Much the same as 2020, this year I reworked previous years to work the same way as all the others (original versions are preserved in the relevant year's `/extra` folder)
     * also started on 2015 this year
 * 2022: No majors changes planned, business as usual!
+* 2023: Still operating in the same way, considering re-writing my code runner, but also participating more casually this year
