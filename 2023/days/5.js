@@ -8,30 +8,8 @@ const part1 = input => {
       }
     )
   )
-  //console.log(seeds,maps)
-  return seeds.map(seed => {
-    let val = seed
-    //console.log('seed: ',seed)
-    for(const map of maps){
-      let found = false
-      let line = 0
-      while(!found && line<map.length){
-        const {source_start,length} = map[line]
-        if(val >= source_start && val < (source_start+length))
-          found = true
-        else
-          line++
-      }
-      if(found) {
-        const {dest_start,source_start} = map[line]
-        val = (val - source_start) + dest_start
-      }
-      //console.log({found,line,map:map[line],val})
-    }
-    return val
-  }).reduce((a,b)=>Math.min(a,b))
+  return seeds.map(seed => mapSeed(seed,maps)).reduce((a,b)=>Math.min(a,b))
 }
-
 const mapSeed = (seed,maps) => {
   let val = seed
   for(const map of maps){
