@@ -12,4 +12,15 @@ const part1 = input => {
   },1)
 }
 
-module.exports = { part1 }
+const part2 = input => {
+  const [time, distance] = input.split('\n').map(line => line.split(/: +/).pop().split(/ +/).join(''))
+  let hold = time - 1 // boat doesn't move if held down the whole time
+  let wins = 0
+  while(hold>0){
+    if((time-hold)*hold>distance)wins++
+    hold--
+  }
+  return wins
+}
+
+module.exports = { part1, part2 }
