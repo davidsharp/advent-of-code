@@ -2,14 +2,14 @@ const part1 = input => input.split('\n').map(line=>{
   const [hand,bid] = line.split(' ')
   let sorted = [...hand].sort().join('')
   let strength = 0
-  for(let i = hands.length-1;i>0;i--){
+  for(let i = hands.length-1;i>=0;i--){
     if(hands[i].test(sorted)){
       strength = i+1 //(0 = high card)
       break
     }
   }
 
-  return {hand,strength,bid}
+  return {hand,strength,bid:Number(bid)}
 }).sort((a,b)=>{
   if(a.strength!=b.strength)
     return a.strength>b.strength?1:-1
