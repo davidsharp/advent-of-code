@@ -9,17 +9,23 @@ const part1 = input => input.split('\n').map(line=>{
     }
   }
 
-  return {first:hand[0],strength,bid}
-}).sort((a,b)=>(
-  a.strength>b.strength?1:
-  a.strength<b.strength?-1:
-  card(a.first)>card(b.first)?1:-1
-)).reduce((acc,c,i)=>acc+(c.bid*(i+1)),0)
+  return {hand,strength,bid}
+}).sort((a,b)=>{
+  if(a.strength!=b.strength)
+    return a.strength>b.strength?1:-1
+  else{
+    let i = 0
+    while(card(a.hand[i])==card(b.hand[i]))
+      i++
+    return card(a.hand[i])>card(b.hand[i])?1:-1
+  }
+}).reduce((acc,c,i)=>acc+(c.bid*(i+1)),0)
 // ascending strength
 const hands = [
   /(.)\1{1}/,
   /(.)\1{1}.?(.)\2{1}/,
   /(.)\1{2}/,
+  /^(.)\1{1,2}(.)\2{1,2}$/,
   /(.)\1{3}/,
   /(.)\1{4}/,
 ]
