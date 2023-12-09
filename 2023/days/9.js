@@ -4,6 +4,12 @@ const part1 = input => {
     hist => calcNext(hist)
   ).reduce((a,b)=>a+b)
 }
+const part2 = input => {
+  const histories = input.split('\n').map(x=>x.split(' ').map(Number))
+  return histories.map(
+    hist => calcNext(hist.toReversed()) // Node 20+
+  ).reduce((a,b)=>a+b)
+}
 const calcNext = values => {
   const test = new Set(values)
   if(test.size == 1 && test.has(0)){
@@ -16,4 +22,4 @@ const calcNext = values => {
   }
 }
 
-module.exports = { part1 }
+module.exports = { part1, part2 }
