@@ -10,12 +10,7 @@ const calcNext = values => {
     return 0
   }
   else {
-    let diffs = values.map((a,i)=>{
-      const b = values[i+1]
-      const big = Math.max(a,b)
-      const small = Math.min(a,b)
-      return Math.abs(big - small)
-    })
+    let diffs = values.map((v,i)=>values[i+1]-v)
     diffs.pop()
     return calcNext(diffs) + values[values.length-1]
   }
