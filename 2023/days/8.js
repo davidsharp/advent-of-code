@@ -39,19 +39,6 @@ const part2 = input => {
     }
     return step
   })
-  /*
-  let lcm = null
-  steps = steps.map(num=>({num,/*set:new Set([num]),* /highest:num}))
-  while(!lcm){
-    steps.sort((a,b)=>a.highest>b.highest?1:-1)
-    steps[0].highest += steps[0].num
-    //steps[0].set.add(steps[0].num)
-    if(new Set(steps.map(({highest})=>highest)).size == 1){
-      lcm = steps[0].highest
-    }
-  }
-  return lcm
-  */
  return steps.sort().slice(0,1).map((step) => {
   let num = step
   while(!steps.reduce((a,b)=>a&&(num%b==0),true)){num+=step}
@@ -59,4 +46,4 @@ const part2 = input => {
  })[0]
 }
 
-module.exports = { /*part1,*/ part2 }
+module.exports = { part1, part2 }
