@@ -39,11 +39,11 @@ const part2 = input => {
     }
     return step
   })
- return steps.sort().slice(0,1).map((step) => {
-  let num = step
-  while(!steps.reduce((a,b)=>a&&(num%b==0),true)){num+=step}
+  let smallest = steps.sort()[0]
+  let num = smallest
+  while(!steps.reduce((a,b)=>a&&(num%b==0),true))
+    num+=smallest
   return num
- })[0]
 }
 
 module.exports = { part1, part2 }
