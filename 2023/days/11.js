@@ -32,7 +32,20 @@ const part1 = input => {
     }
   }
 
-  return {galaxies,empty_col,empty_row}
+  let pairs = []
+  galaxies = galaxies.forEach((galaxy,i)=>{
+    galaxies.slice(i+1).forEach(
+      _galaxy => pairs.push([galaxy,_galaxy])
+    )
+  })
+
+  return pairs.map(
+    ([a,b])=>(
+      (a[0]>b[0]?a[0]-b[0]:b[0]-a[0])+
+      (a[1]>b[1]?a[1]-b[1]:b[1]-a[1])
+    )
+  ).reduce((a,b)=>a+b)
+  //return {galaxies,pairs_len:pairs.length,empty_col,empty_row}
 }
 
 module.exports ={ part1 }
