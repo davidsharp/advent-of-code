@@ -4,14 +4,14 @@ const parse = input => {
     rules:rules.split('\n').map(rule=>{
       const [key,value] = rule.split(': ')
       return [key,value.split(' or ').map(range=>range.split('-').map(Number))]
-    }),//.filter(rule=>/departure/gi.test(rule[0])),
+    }),
     myTicket:myTicket.split('\n')[1].split(',').map(Number),
     tickets:tickets.split('\n').slice(1).map(ticket=>ticket.split(',').map(Number))
   }
 }
 
 const part1 = input => {
-  const {rules,myTicket,tickets} = parse(input)
+  const {rules,tickets} = parse(input)
   let invalidFields = []
   tickets.forEach(ticket=>{
     ticket.forEach(field=>{
@@ -52,7 +52,6 @@ const part2 = input => {
   })
   let fields = new Array(myTicket.length).fill(false)
   while(fields.findIndex(field=>!field)>-1){
-    console.log(fields)
     fields.forEach((field,i)=>{
       if(field) return field
       let matchingField = [];
@@ -74,8 +73,7 @@ const part2 = input => {
       if(matchingField&&matchingField.length==1)fields[i]=matchingField[0]
     })
   }
-  console.log(fields)
-  return fields.reduce((a,field,i)=>/departure/gi.test(field)?a+myTicket[i]:a,0)
+  return fields.reduce((a,field,i)=>/departure/gi.test(field)?a*myTicket[i]:a,1)
 }
 
 module.exports = {part1,part2}
