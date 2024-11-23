@@ -6,9 +6,8 @@ const parse = input => {
 }
 
 class Tile {
-  rotation=0
-  flippedX=false
-  flippedY=false
+  rotation=0 // always rotate first
+  flippedY=false // only needs single flip
   matches=[null,null,null,null]
   constructor(id,rows) {
     this.id = id
@@ -27,10 +26,10 @@ class Tile {
     this.rotation += by
     this.rotation %= 4
   }
-  get left() {return this.sides[3]}
-  get right() {return this.sides[1]}
-  get top() {return this.sides[0]}
-  get bottom() {return this.sides[2]}
+  get left() {return this.matches[3]}
+  get right() {return this.matches[1]}
+  get top() {return this.matches[0]}
+  get bottom() {return this.matches[2]}
 }
 
 const matchTiles = tiles => {
@@ -90,6 +89,10 @@ const part2 = input => {
       const next = tiles[nextId]
       while(current.id != next.left){
         next.rotate()
+      }
+      if (current.sides[(1 + current.rotation) % 4] != next.sides[(3 + current.rotation) % 4]) {
+        // if not the same, then needs flipping vertically (read clockwise, not top-to-bottom)
+        next.flippedY = !next.flippedY
       }
       x++
     }
