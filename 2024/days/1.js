@@ -15,4 +15,11 @@ const part1 = input => {
   },0)
 }
 
-module.exports = {part1}
+const part2 = input => {
+  const [list1, list2] = parse(input)
+  return list1.reduce((acc, a, i) => {
+    return acc + (a * list2.filter(b=>a==b).length)
+  },0)
+}
+
+module.exports = {part1, part2}
