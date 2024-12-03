@@ -11,7 +11,7 @@ const part2 = input => {
   instructions.forEach(instruction => {
     if (instruction == 'do()') enabled = true
     else if (instruction == 'don\'t()') enabled = false
-      else if (enabled) {
+    else if (enabled) {
       const [a,b] = instruction.match(/\d+,\d+/)[0].split(',').map(Number)
       sum += (a*b)
     }
