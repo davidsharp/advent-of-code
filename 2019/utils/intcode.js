@@ -6,6 +6,10 @@ class Interpreter {
     2: 'mult',
     3: 'in',
     4: 'out',
+    5: 'jumpIfTrue',
+    6: 'jumpIfFalse',
+    7: 'lessThan',
+    8: 'equals',
     99: 'end',
   }
   // parameter modes
@@ -51,13 +55,16 @@ class Interpreter {
     else // Interpreter.MODES.POSITION
       return this.cells[value]
   }
+  getParams(count=1) {
+    return this.cells.slice(this.pointer+1,this.pointer+count+1)
+  }
   add(modes) {
-    const [a,b,out] = this.cells.slice(this.pointer+1,this.pointer+4)
+    const [a,b,out] = this.getParams(3)
     this.cells[out] = this.get(a,modes[0]) + this.get(b,modes[1])
     this.step(4)
   }
   mult(modes) {
-    const [a,b,out] = this.cells.slice(this.pointer+1,this.pointer+4)
+    const [a,b,out] = this.getParams(3)
     this.cells[out] = this.get(a,modes[0]) * this.get(b,modes[1])
     this.step(4)
   }
@@ -68,6 +75,24 @@ class Interpreter {
   out(modes) {
     this.output(this.get(this.cells[this.pointer+1],modes[0]))
     this.step(2)
+  }
+  jumpIfTrue(modes) {
+    if (this.get(this.cells[this.pointer+1],modes[0])!=0) this.pointer = this.cells[this.pointer+2]
+    else this.step(3)
+  }
+  jumpIfFalse(modes) {
+    if (this.get(this.cells[this.pointer+1],modes[0])==0) this.pointer = this.cells[this.pointer+2]
+    else this.step(3)
+  }
+  lessThan(modes) {
+    const [a,b,out] = this.getParams(3)
+    this.cells[out] = this.get(a,modes[0]) < this.get(b,modes[1]) ? 1 : 0
+    this.step(4)
+  }
+  equals(modes) {
+    const [a,b,out] = this.getParams(3)
+    this.cells[out] = this.get(a,modes[0]) == this.get(b,modes[1]) ? 1 : 0
+    this.step(4)
   }
   end() { this.halted = true }
   result() { return this.cells[0] }

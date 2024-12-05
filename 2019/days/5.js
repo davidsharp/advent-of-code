@@ -8,4 +8,12 @@ const part1 = input => {
   return output.pop()
 }
 
-module.exports = {part1}
+const part2 = input => {
+  let output = []
+  const int = new Interpreter(input,x=>output.push(x))
+  int.pipe(5)
+  int.run()
+  return output.pop()
+}
+
+module.exports = {part1, part2}
