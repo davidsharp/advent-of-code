@@ -2,7 +2,7 @@
 
 class Interpreter {
   halted = false
-  pointer = 0
+  pointer = 0 // instruction pointer
   cells = [] // {}?
   instructions = {
     1: 'add',
