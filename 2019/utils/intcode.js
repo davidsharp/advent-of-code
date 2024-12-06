@@ -26,6 +26,7 @@ class Interpreter {
     this.cells = input.split(',').map(Number)
     if(output) this.output = output
   }
+  // PUBLIC FUNCTIONS
   run() { while (!this.halted) {
     const [inst,modes] = this.parse(this.cells[this.pointer])
     const instruction = Interpreter.instructions[inst]
@@ -49,6 +50,8 @@ class Interpreter {
     return [instruction,parameterModes]
   }
   poke(idx,value) { this.cells[idx] = value }
+  result() { return this.cells[0] }
+  // HELPER FUNCTIONS
   get(value, mode) {
     if(mode == Interpreter.MODES.IMMEDIATE)
       return value
@@ -58,6 +61,7 @@ class Interpreter {
   getParams(count=1) {
     return this.cells.slice(this.pointer+1,this.pointer+count+1)
   }
+  // INSTRUCTION FUNCTIONS
   add(modes) {
     const [a,b,out] = this.getParams(3)
     this.cells[out] = this.get(a,modes[0]) + this.get(b,modes[1])
@@ -97,7 +101,6 @@ class Interpreter {
     this.step(4)
   }
   end() { this.halted = true }
-  result() { return this.cells[0] }
 }
 
 module.exports = {Interpreter}
