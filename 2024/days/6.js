@@ -60,68 +60,55 @@ const part2 = input => {
     }
   }
 
-  let loopCount = 0
   let positions = []
-  // check 3 rotations, 4th to make square is valid unless another rotation happens between
-  for (let i = 0; i < rotatedAt.length - 3; i++) {
-    const [a,b,c] = rotatedAt.slice(i,i+3)
+  for (let i = 0; i < rotatedAt.length ; i++) {
+    const c = rotatedAt[i]
+    // last will go off the edge, so set to Infinity
+    const next = rotatedAt[i+1] || directions[c[2]].map(n=>n*Infinity||0)
 
-    const x = a[0] == b[0] ? c[0] : a[0]
-    const y = a[1] == b[1] ? c[1] : a[1]
-    // hypothetical 4th point? maybe should just use 4th
-    let d = [x,y,(c[2]+1)%4]
-
-    let hit = false
-    // check route c -> d
+    //console.log(c,next)
+    // check route c -> next
     let cx = c[0]
     let cy = c[1]
-    while ((cx != d[0] || cy != d[1]) && !hit) {
+    while ((cx != next[0] || cy != next[1]) && (cx >= 0 && cy >= 0 &&
+    cx < dimensions[0] && cy < dimensions[1])) {
       cx += directions[c[2]][0]
       cy += directions[c[2]][1]
-      if (obstacles.has(`${cx},${cy}`)) hit = true
-      else {
-        const prevRotations = rotatedAt.slice(0,i)
-        const checkDir = (c[2]+1)%4
+      //console.log('-',c,cx,cy)
 
-        let found = false
-        let dx = cx
-        let dy = cy
-        while (!found && (dx >= 0 && dy >= 0 &&
-        dx < dimensions[0] && dy < dimensions[1])) {
-          if (prevRotations.find(([x, y, d]) => {
-            // checking that the following rotation is correct//?
-            if (x == dx && y == dy /* && d == (checkDir+1)%4*/) return true
-            else return false
-          })) {
+      const prevRotations = rotatedAt.slice(0,i)
+      const checkDir = (c[2]+1)%4
+
+      // turn and crawl
+      let hit = false
+      let found = false
+      let dx = cx
+      let dy = cy
+      while (!hit && !found && (dx >= 0 && dy >= 0 &&
+      dx < dimensions[0] && dy < dimensions[1])) {
+        //console.log('--',dx,dy)
+        // assume that obstacles that aren't previous rotations are bad
+        if (obstacles.has(`${dx},${dy}`)){
+          hit = true
+        } else {
+          const foundRotation = prevRotations.find(([x, y, d]) => {
+            return x == dx && y == dy //check d?
+          })
+          if (foundRotation) {
             found = true
           }
-          dx += checkDir[0]
-          dy += checkDir[1]
         }
-        if(found) positions.push([dx,dy])
+        dx += directions[checkDir][0]
+        dy += directions[checkDir][1]
       }
+      console.log(dx,dy,hit,found)
+      if(found) positions.push([dx,dy])
     }
-
-    /*
-    // check route d -> a
-    let dx = d[0]
-    let dy = d[1]
-    while ((dx != a[0] || dy != a[1]) && !hit) {
-      dx += directions[d[2]][0]
-      dy += directions[d[2]][1]
-      if(obstacles.has(`${dx},${dy}`)) hit = true
-    }
-    */
-    // maybe not needed with new check?
-    if(!hit) positions.push([d[0],d[1]]) //loopCount++
-    console.log([a,b,c,d],hit)
   }
 
   console.log(positions)
 
-  return loopCount
-
-  // assumes only squares, TODO, check for rotations to earlier rotations instead?
+  return positions.length
 }
 
 module.exports = {part1,part2}
