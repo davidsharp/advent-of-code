@@ -80,8 +80,14 @@ const part2 = input => {
       cy += directions[c[2]][1]
 
       // skip it if we've tried before
-      if (attemptedObstacles.has(`${cx},${cy}`)) break;
+      if (
+        attemptedObstacles.has(`${cx},${cy}`)
+        // or if outside
+        || (cx < 0 || cy < 0 || cx > dimensions[0] || cy > dimensions[1])
+      ) break;
       attemptedObstacles.add(`${cx},${cy}`)
+
+      console.log('obby: ',cx,cy)
 
       const newObstacles = new Set([...obstacles,`${cx},${cy}`])
       const visited = new Set()
@@ -97,14 +103,17 @@ const part2 = input => {
         if (newObstacles.has(`${x},${y}`)) {
           guard.direction += 1
           guard.direction %= 4
+          console.log('guard turned: ',directions[guard.direction])
         } else {
           guard.position = [x,y]
+          console.log('guard moved to: ',x,y)
           const key = `${x},${y},${guard.direction}`
           if(visited.has(key))loopFound = true
           else visited.add(key)
         }
       }
       if(loopFound) positions.push([cx,cy])
+      if(loopFound) console.log('found loop')
     }
   }
 
@@ -114,3 +123,10 @@ const part2 = input => {
 }
 
 module.exports = {part1,part2}
+
+/*
+###
+#.#
+.^#
+###
+*/
