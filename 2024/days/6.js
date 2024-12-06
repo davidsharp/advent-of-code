@@ -74,7 +74,7 @@ const part2 = input => {
     let cy = c[1]
     while ((cx != next[0] || cy != next[1]) && (cx >= 0 && cy >= 0 &&
     cx < dimensions[0] && cy < dimensions[1])) {
-      const guard = {position:[cx,cy,c[2]],direction:c[2]}
+      const guard = {position:[...initialGuardPosition],direction:0}//{position:[cx,cy],direction:c[2]}
 
       cx += directions[c[2]][0]
       cy += directions[c[2]][1]
@@ -86,7 +86,7 @@ const part2 = input => {
         (cx < 0 || cy < 0 || cx > dimensions[0] || cy > dimensions[1])
       ){
         console.log('would skip',attemptedObstacles.has(`${cx},${cy}`),cx,cy,attemptedObstacles)
-        //break;
+        break;
       }
       attemptedObstacles.add(`${cx},${cy}`)
 
