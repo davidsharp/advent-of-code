@@ -81,10 +81,13 @@ const part2 = input => {
 
       // skip it if we've tried before
       if (
-        attemptedObstacles.has(`${cx},${cy}`)
+        attemptedObstacles.has(`${cx},${cy}`) ||
         // or if outside
-        || (cx < 0 || cy < 0 || cx > dimensions[0] || cy > dimensions[1])
-      ) break;
+        (cx < 0 || cy < 0 || cx > dimensions[0] || cy > dimensions[1])
+      ){
+        console.log('would skip',attemptedObstacles.has(`${cx},${cy}`),cx,cy,attemptedObstacles)
+        //break;
+      }
       attemptedObstacles.add(`${cx},${cy}`)
 
       console.log('obby: ',cx,cy)
@@ -113,11 +116,11 @@ const part2 = input => {
         }
       }
       if(loopFound) positions.push([cx,cy])
-      if(loopFound) console.log('found loop')
+      if(loopFound) console.log('found loop',cx,cy)
     }
   }
 
-  //console.log(positions)
+  console.log(positions)
 
   return positions.length
 }
