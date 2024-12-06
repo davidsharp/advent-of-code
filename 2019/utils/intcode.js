@@ -77,11 +77,13 @@ class Interpreter {
     this.step(2)
   }
   jumpIfTrue(modes) {
-    if (this.get(this.cells[this.pointer+1],modes[0])!=0) this.pointer = this.cells[this.pointer+2]
+    const [a,jumpTo] = this.getParams(2)
+    if (this.get(a,modes[0])!=0) this.pointer = this.get(jumpTo,modes[1])
     else this.step(3)
   }
   jumpIfFalse(modes) {
-    if (this.get(this.cells[this.pointer+1],modes[0])==0) this.pointer = this.cells[this.pointer+2]
+    const [a,jumpTo] = this.getParams(2)
+    if (this.get(a,modes[0])==0) this.pointer = this.get(jumpTo,modes[1])
     else this.step(3)
   }
   lessThan(modes) {
