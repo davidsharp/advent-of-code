@@ -66,43 +66,42 @@ const part2 = input => {
     // last will go off the edge, so set to Infinity
     const next = rotatedAt[i+1] || directions[c[2]].map(n=>n*Infinity||0)
 
+    console.log('point: ',i)
+
     //console.log(c,next)
     // check route c -> next
     let cx = c[0]
     let cy = c[1]
     while ((cx != next[0] || cy != next[1]) && (cx >= 0 && cy >= 0 &&
     cx < dimensions[0] && cy < dimensions[1])) {
+      const guard = {position:[cx,cy,c[2]],direction:0}
+
       cx += directions[c[2]][0]
       cy += directions[c[2]][1]
       //console.log('-',c,cx,cy)
 
-      const prevRotations = rotatedAt.slice(0,i)
-      const checkDir = (c[2]+1)%4
-
-      // turn and crawl
-      let hit = false
-      let found = false
-      let dx = cx
-      let dy = cy
-      while (!hit && !found && (dx >= 0 && dy >= 0 &&
-      dx < dimensions[0] && dy < dimensions[1])) {
-        //console.log('--',dx,dy)
-        // assume that obstacles that aren't previous rotations are bad
-        if (obstacles.has(`${dx},${dy}`)){
-          hit = true
+      const newObstacles = new Set([...obstacles,`${cx},${cy}`])
+      const visited = new Set()
+      let loopFound = false
+      // just re-run a walk through
+      while (
+        !loopFound &&
+        guard.position[0] >= 0 && guard.position[1] >= 0 &&
+        guard.position[0] < dimensions[0] && guard.position[1] < dimensions[1]
+      ) {
+        // check next space
+        const [x,y] = [guard.position[0]+directions[guard.direction][0],guard.position[1]+directions[guard.direction][1]]
+        if (newObstacles.has(`${x},${y}`)) {
+          guard.direction += 1
+          guard.direction %= 4
         } else {
-          const foundRotation = prevRotations.find(([x, y, d]) => {
-            return x == dx && y == dy //check d?
-          })
-          if (foundRotation) {
-            found = true
-          }
+          guard.position = [x,y]
+          const key = `${x},${y},${guard.direction}`
+          if(visited.has(key))loopFound = true
+          else visited.add(key)
         }
-        dx += directions[checkDir][0]
-        dy += directions[checkDir][1]
       }
-      console.log(dx,dy,hit,found)
-      if(found) positions.push([dx,dy])
+      if(loopFound) positions.push([cx,cy])
     }
   }
 
