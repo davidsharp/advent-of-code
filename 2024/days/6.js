@@ -66,7 +66,6 @@ const part2 = input => {
     // last will go off the edge, so set to Infinity
     const next = rotatedAt[i+1] || directions[c[2]].map(n=>n*Infinity||0)
 
-    console.log('point: ',i)
 
     //console.log(c,next)
     // check route c -> next
@@ -74,11 +73,10 @@ const part2 = input => {
     let cy = c[1]
     while ((cx != next[0] || cy != next[1]) && (cx >= 0 && cy >= 0 &&
     cx < dimensions[0] && cy < dimensions[1])) {
-      const guard = {position:[cx,cy,c[2]],direction:0}
+      const guard = {position:[cx,cy,c[2]],direction:c[2]}
 
       cx += directions[c[2]][0]
       cy += directions[c[2]][1]
-      //console.log('-',c,cx,cy)
 
       const newObstacles = new Set([...obstacles,`${cx},${cy}`])
       const visited = new Set()
@@ -105,7 +103,7 @@ const part2 = input => {
     }
   }
 
-  console.log(positions)
+  //console.log(positions)
 
   return positions.length
 }
