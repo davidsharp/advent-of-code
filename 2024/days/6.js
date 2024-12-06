@@ -44,7 +44,8 @@ const part2 = input => {
       return {obstacles,guard}
     }, { obstacles: new Set(), guard: {position:[],direction:0} })
   const dimensions = [input.split('\n')[0].length,input.split('\n').length]
-  const rotatedAt = []
+  const initialGuardPosition = [...guard.position]
+  const rotatedAt = [[...guard.position,guard.direction]]
   while (
     guard.position[0] >= 0 && guard.position[1] >= 0 &&
     guard.position[0] < dimensions[0] && guard.position[1] < dimensions[1]
@@ -61,11 +62,11 @@ const part2 = input => {
   }
 
   let positions = []
+  const attemptedObstacles = new Set([`${initialGuardPosition[0]},${initialGuardPosition[1]}`])
   for (let i = 0; i < rotatedAt.length ; i++) {
     const c = rotatedAt[i]
     // last will go off the edge, so set to Infinity
     const next = rotatedAt[i+1] || directions[c[2]].map(n=>n*Infinity||0)
-
 
     //console.log(c,next)
     // check route c -> next
@@ -77,6 +78,10 @@ const part2 = input => {
 
       cx += directions[c[2]][0]
       cy += directions[c[2]][1]
+
+      // skip it if we've tried before
+      if (attemptedObstacles.has(`${cx},${cy}`)) break;
+      attemptedObstacles.add(`${cx},${cy}`)
 
       const newObstacles = new Set([...obstacles,`${cx},${cy}`])
       const visited = new Set()
