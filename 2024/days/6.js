@@ -68,6 +68,7 @@ const part2 = input => {
 
     const x = a[0] == b[0] ? c[0] : a[0]
     const y = a[1] == b[1] ? c[1] : a[1]
+    // hypothetical 4th point? maybe should just use 4th
     let d = [x,y,(c[2]+1)%4]
 
     let hit = false
@@ -77,8 +78,31 @@ const part2 = input => {
     while ((cx != d[0] || cy != d[1]) && !hit) {
       cx += directions[c[2]][0]
       cy += directions[c[2]][1]
-      if(obstacles.has(`${cx},${cy}`)) hit = true
+      if (obstacles.has(`${cx},${cy}`)) hit = true
+      else {
+        const prevRotations = rotatedAt.slice(0,i)
+        const checkDir = (c[2]+1)%4
+
+        let found = false
+        let dx = cx
+        let dy = cy
+        while (!found && (dx >= 0 && dy >= 0 &&
+        dx < dimensions[0] && dy < dimensions[1])) {
+          if (prevRotations.find(([x, y, d]) => {
+            // checking that the following rotation is correct//?
+            if (x == dx && y == dy /* && d == (checkDir+1)%4*/) return true
+            else return false
+          })) {
+            found = true
+          }
+          dx += checkDir[0]
+          dy += checkDir[1]
+        }
+        if(found) positions.push([dx,dy])
+      }
     }
+
+    /*
     // check route d -> a
     let dx = d[0]
     let dy = d[1]
@@ -87,7 +111,8 @@ const part2 = input => {
       dy += directions[d[2]][1]
       if(obstacles.has(`${dx},${dy}`)) hit = true
     }
-
+    */
+    // maybe not needed with new check?
     if(!hit) positions.push([d[0],d[1]]) //loopCount++
     console.log([a,b,c,d],hit)
   }
