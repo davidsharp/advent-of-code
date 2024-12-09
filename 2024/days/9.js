@@ -54,17 +54,7 @@ const part2 = input => {
       if (file.blocks < disk[freeSpace].blocks) toAdd.push({id:'space',blocks:disk[freeSpace].blocks-file.blocks})
       disk.splice(freeSpace,1,...toAdd)
     }
-    // rejoin spaces?
-    /*disk.reduce(((newDisk, fileOrSpace) => {
-      if (fileOrSpace.id == 'space' && newDisk[newDisk.length - 1]?.id == 'space') {
-        newDisk[newDisk.length - 1].blocks += fileOrSpace.blocks
-      } else {
-        newDisk.push(fileOrSpace)
-      }
-      return newDisk
-      }),[])*/
   }
-  //console.log(disk.map(({id,blocks})=>`${id},${blocks}`))
 
   return disk.reduce(({sum,blockOffset}, file) => {
     if (file.id != 'space') {
