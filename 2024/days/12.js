@@ -55,15 +55,15 @@ const part2 = input => {
         // [[startX,startY],[endx,endY],d]
         if (dx == 0) {
           edges.push([
-            [x,y+(dy==1?1:0)].toString(),
-            [x+1,y+(dy==1?1:0)].toString(),
+            [x,y].toString(),
+            [x+1,y].toString(),
             0+(dy==1?1:0), // horizontal
           ])
         }
         else {
           edges.push([
-            [x+(dx==1?1:0),y].toString(),
-            [x+(dx==1?1:0),y+1].toString(),
+            [x,y].toString(),
+            [x,y+1].toString(),
             2+(dx==1?1:0), // vertical
           ])
         }
@@ -93,6 +93,8 @@ const part2 = input => {
           else sides.push(edge)
           return sides.filter(side=>side[2]!='x')
         },[])
+        console.log(area,sides.length)
+        if(sides.length!=4)console.log(sides.sort((a,b)=>a[2]-b[2]))
         sum += (area * sides.length)
       }
     }
@@ -101,3 +103,16 @@ const part2 = input => {
 }
 
 module.exports = {part1,part2}
+
+
+/*
+result should be 946
+A should have 22 fences
+AAAAAAAA
+AACBBDDA
+AACBBAAA
+ABBAAAAA
+ABBADDDA
+AAAADADA
+AAAAAAAA
+*/
