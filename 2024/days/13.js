@@ -11,8 +11,14 @@ const part1 = input => {
     for (let i = 0; i <= 100; i++) {
       const distX = prize[0] - (a[0] * i)
       const distY = prize[1] - (a[1] * i)
-      if (distX % b[0] == 0 && distY % b[1] == 0){
+      if (distX == 0 && distY == 0){
+        const cost = (3 * i)
+        console.log(i,0)
+        if (cost < minTokens) minTokens = cost
+      }
+      if (distX % b[0] == 0 && distY % b[1] == 0 && (distX/b[0])<=100 && (distX/b[0])>=0){
         const cost = (3 * i) + (distX/b[0])
+        console.log(i,distX/b[0])
         if (cost < minTokens) minTokens = cost
       }
     }
