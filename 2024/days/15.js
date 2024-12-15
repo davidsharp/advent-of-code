@@ -18,6 +18,26 @@ class Box {
     this.y = y
     this.room = room
   }
+  canMove(direction) {
+    let success = false;
+    let dx=0, dy=0;
+    if (direction == '>') dx = 1;
+    if (direction == '<') dx = -1;
+    if (direction == '^') dy = -1;
+    if (direction == 'v') dy = 1;
+    const space = this.room[this.y + dy][this.x + dx]
+    if (space instanceof Box) {
+      const _success = space.canMove(direction)
+      if (_success) {
+        success = true
+      }
+    }
+    // empty
+    else if (!space) {
+      success = true
+    }
+    return success
+  }
   push(direction) {
     let success = false;
     let dx=0, dy=0;
@@ -27,8 +47,9 @@ class Box {
     if (direction == 'v') dy = 1;
     const space = this.room[this.y + dy][this.x + dx]
     if (space instanceof Box) {
-      const _success = space.push(direction)
+      const _success = space.canMove(direction)
       if (_success) {
+        space.push(direction)
         this.moveTo(this.x+dx,this.y+dy)
         success = true
       }
@@ -177,4 +198,17 @@ const part2 = input => {
   ),0)
 }
 
-module.exports = {part1,part2}
+module.exports = { part1 ,part2}
+
+/*
+#######
+#...#.#
+#.....#
+#..OO.#
+#..O@.#
+#.....#
+#######
+
+^
+<vv<<^^<<^^
+*/
