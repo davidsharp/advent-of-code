@@ -59,8 +59,9 @@ const part1 = input => {
     //console.log(`Move ${direction}:`)
     //console.log(draw(room,robot))
   })
+  //console.log(draw(room,robot))
   return boxes.reduce((sum,box) => (
-    sum + ((box.x * 100) + box.y)
+    sum + ((box.y * 100) + box.x)
   ),0)
 }
 const draw = (room,robot) => (
