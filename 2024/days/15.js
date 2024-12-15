@@ -54,12 +54,14 @@ const part1 = input => {
   room[robot.y][robot.x] = robot
   // put boxes in room
   boxes.forEach(box => {room[box.y][box.x]=box})
-  instructions.split('').forEach(direction => {
+  instructions.split('').filter(x=>/\<|\>|v|\^/.exec(x)).forEach(direction => {
     robot.push(direction)
-    console.log(`Move ${direction}:`)
-    console.log(draw(room,robot))
+    //console.log(`Move ${direction}:`)
+    //console.log(draw(room,robot))
   })
-  return draw(room,robot)
+  return boxes.reduce((sum,box) => (
+    sum + ((box.x * 100) + box.y)
+  ),0)
 }
 const draw = (room,robot) => (
   room.map(line => line.map(x => {
