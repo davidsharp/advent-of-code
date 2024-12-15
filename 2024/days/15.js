@@ -76,8 +76,8 @@ const parse2 = input => {
   const [map,instructions] = input.split('\n\n')
   const {room,robot,boxes} = map.split('\n').reduce(({ room, robot, boxes },line,y) => {
     const row = line.split('').flatMap((char,x) => {
-      if(char=='O') boxes.push([x,y])
-      if(char=='@') robot = [x,y]
+      if(char=='O') boxes.push([x*2,y])
+      if(char=='@') robot = [x*2,y]
       if(char=='#') return ['#','#']
       else return [null,null]
     })
@@ -126,7 +126,7 @@ class Box2 extends Box {
           this.moveTo(this.x+dx,this.y+dy)
         }
       }
-      if (space2 instanceof Box2) {
+      if (space2 instanceof Box2 && space2 != space1) {
         const _success = space2.push(direction)
         if (_success) {
           this.moveTo(this.x+dx,this.y+dy)
@@ -148,13 +148,20 @@ const part2 = input => {
   const {room,robot,boxes,instructions} = parse2(input)
   room[robot.y][robot.x] = robot
   // put boxes in room
-  boxes.forEach(box => {room[box.y][box.x]=box})
+  boxes.forEach(box => {
+    room[box.y][box.x]=box
+    room[box.y][box.x+1]=box
+  })
   instructions.split('').filter(x=>/\<|\>|v|\^/.exec(x)).forEach(direction => {
     robot.push(direction)
+    console.log(`Move ${direction}:`)
+    console.log(draw(room,robot))
   })
   return boxes.reduce((sum,box) => (
     sum + ((box.y * 100) + box.x)
   ),0)
 }
+
+// TODO - handle horizontal and vertical pushes differently!
 
 module.exports = {part1,part2}
