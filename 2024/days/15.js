@@ -94,19 +94,33 @@ class Box2 extends Box {
     if (direction == '<') dx = -1;
     if (direction == '^') dy = -1;
     if (direction == 'v') dy = 1;
-    const space1 = this.room[this.y + dy][this.x + dx]
-    const space2 = this.room[this.y + dy][this.x + 1 + dx]
+    if (direction == '^' || direction == 'v') {
+      const space1 = this.room[this.y + dy][this.x + dx]
+      const space2 = this.room[this.y + dy][this.x + 1 + dx]
 
-    // empty
-    if (!space1 && !space2) {
-      success = true
-    }
-    else if (space1 == '#' || space2 == '#') {
-      success = false
+      // empty
+      if (!space1 && !space2) {
+        success = true
+      }
+      else if (space1 == '#' || space2 == '#') {
+        success = false
+      }
+      else {
+        success = (!space1 || space1.canMove(direction)) && (!space2 && space2.canMove(direction))
+      }
     }
     else {
-      success = (!space1 || space1.canMove(direction)) && (!space2 && space2.canMove(direction))
+      // account for left push?
+      const space = this.room[this.y + dy][this.x + dx]
+      if (space instanceof Box2) {
+        success = space.canMove(direction)
+      }
+      // empty
+      else if (!space) {
+        success = true
+      }
     }
+
     return success
   }
   push(direction) {
@@ -152,6 +166,7 @@ const part2 = input => {
     room[box.y][box.x]=box
     room[box.y][box.x+1]=box
   })
+  console.log(draw(room,robot))
   instructions.split('').filter(x=>/\<|\>|v|\^/.exec(x)).forEach(direction => {
     robot.push(direction)
     console.log(`Move ${direction}:`)
@@ -161,7 +176,5 @@ const part2 = input => {
     sum + ((box.y * 100) + box.x)
   ),0)
 }
-
-// TODO - handle horizontal and vertical pushes differently!
 
 module.exports = {part1,part2}
