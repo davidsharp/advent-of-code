@@ -75,49 +75,28 @@ const part1 = input => {
   return comp.run().join(',')
 }
 
+let answers = []
 const part2 = input => {
   // reverse engineer my input?
   const [registers, instructions] = parse(input)
-  console.log(instructions)
-  const x = instructions.toReversed().reduce((a, target, i) => {
-    console.log(a.toString(8).padStart(i,0))
-    a = a << 3n
-    for (let i = 0n; i < 8n; i++) {
-      let b = i
-      b=b^2n
-      let c=(a+i)/(2n**b)
-      b=b^3n
-      b=b^c
-      if(b==target){
-        console.log(`${target} hit!: ${i.toString(2)}`)
-        return a + i
-      }
+  solve(instructions)
+  return answers.sort()[0].toString()
+}
+const solve = (instructions,a = 0n,i=0) => {
+  a = a << 3n
+  for (let x = 0; x < 8; x++) {
+    const com = new Computer([a+BigInt(x),0n,0n],instructions)
+    com.run()
+    if (
+      com.output[0] == instructions[0] &&
+      com.output.length == instructions.length
+    ) {
+      answers.push(a+BigInt(x))
     }
-    return a //?
-  },0n)
-  console.log(x)
-  const com = new Computer([x,0,0],instructions)
-  com.run()
-  return [com.output,instructions]
+    if (com.output.shift() === instructions[instructions.length-(1+i)]) {
+      solve(instructions,a+BigInt(x),i+1)
+    }
+  }
 }
 
 module.exports = {part1,part2}
-
-/*
-const x = instructions.toReversed().reduce((a, target, i) => {
-  console.log(a.toString(8).padStart(i,0))
-  a = a << 3n
-  for (let i = 0n; i < 8n; i++) {
-    let b = i
-    b=b^2n
-    let c=(a+i)/(2n**b)
-    b=b^3n
-    b=b^c
-    if(b==target){
-      console.log(`${target} hit!: ${i.toString(2)}`)
-      return a + i
-    }
-  }
-  return a //?
-},0n)
-*/
