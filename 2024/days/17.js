@@ -1,5 +1,5 @@
 class Computer {
-  pointer = 0
+  pointer = 0n
   constructor(registers,program){
     const [a,b,c] = registers
     this.registers = {a,b,c}
@@ -30,44 +30,44 @@ class Computer {
     else return op // and 7 never appears, right?
   }
   _dv(reg) {
-    const op = this.program[this.pointer+1]
-    this.registers[reg] = Math.trunc(
+    const op = this.program[this.pointer+1n]
+    this.registers[reg] = (
       this.registers.a /
-      (2**this.combo(op))
+      (2n**this.combo(op))
     )
-    this.pointer += 2
+    this.pointer += 2n
   }
   bxl() {
-    const op = this.program[this.pointer+1]
-    this.registers.b ^= op
-    this.pointer += 2
+    const op = this.program[this.pointer+1n]
+    this.registers.b = this.registers.b ^ op
+    this.pointer += 2n
   }
   bst() {
-    const op = this.program[this.pointer+1]
-    this.registers.b = this.combo(op) % 8
-    this.pointer += 2
+    const op = this.program[this.pointer+1n]
+    this.registers.b = this.combo(op) % 8n
+    this.pointer += 2n
   }
   jnz() {
-    if (this.registers.a == 0) this.pointer += 2
+    if (this.registers.a == 0) this.pointer += 2n
     else {
-      const op = this.program[this.pointer+1]
+      const op = this.program[this.pointer+1n]
       this.pointer = op
     }
   }
   bxc() {
-    this.registers.b ^= this.registers.c
-    this.pointer += 2
+    this.registers.b = this.registers.b ^ this.registers.c
+    this.pointer += 2n
   }
   out() {
-    const op = this.program[this.pointer+1]
-    this.output.push(this.combo(op)%8)
-    this.pointer+=2
+    const op = this.program[this.pointer+1n]
+    this.output.push(this.combo(op)%8n)
+    this.pointer+=2n
   }
   adv() { this._dv('a') }
   bdv() { this._dv('b') }
   cdv() { this._dv('c') }
 }
-const parse = input => input.split('\n\n').map(x=>x.match(/\d+\b/g).map(Number))
+const parse = input => input.split('\n\n').map(x=>x.match(/\d+\b/g).map(BigInt))
 
 const part1 = input => {
   const [registers, instructions] = parse(input)
@@ -76,17 +76,48 @@ const part1 = input => {
 }
 
 const part2 = input => {
+  // reverse engineer my input?
   const [registers, instructions] = parse(input)
-  const [,b,c] = registers
-  let a = 0
-  let p
-  while (p != instructions.join(',')) {
-    console.log(a)
-    const com = new Computer([a,b,c],instructions)
-    p = com.run().join(',')
-    a++
-  }
-  return a-1
+  console.log(instructions)
+  const x = instructions.toReversed().reduce((a, target, i) => {
+    console.log(a.toString(8).padStart(i,0))
+    a = a << 3n
+    for (let i = 0n; i < 8n; i++) {
+      let b = i
+      b=b^2n
+      let c=(a+i)/(2n**b)
+      b=b^3n
+      b=b^c
+      if(b==target){
+        console.log(`${target} hit!: ${i.toString(2)}`)
+        return a + i
+      }
+    }
+    return a //?
+  },0n)
+  console.log(x)
+  const com = new Computer([x,0,0],instructions)
+  com.run()
+  return [com.output,instructions]
 }
 
 module.exports = {part1,part2}
+
+/*
+const x = instructions.toReversed().reduce((a, target, i) => {
+  console.log(a.toString(8).padStart(i,0))
+  a = a << 3n
+  for (let i = 0n; i < 8n; i++) {
+    let b = i
+    b=b^2n
+    let c=(a+i)/(2n**b)
+    b=b^3n
+    b=b^c
+    if(b==target){
+      console.log(`${target} hit!: ${i.toString(2)}`)
+      return a + i
+    }
+  }
+  return a //?
+},0n)
+*/
