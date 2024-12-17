@@ -33,7 +33,7 @@ class Computer {
     const op = this.program[this.pointer+1]
     this.registers[reg] = Math.trunc(
       this.registers.a /
-      this.combo(op)
+      (2**this.combo(op))
     )
     this.pointer += 2
   }
@@ -86,13 +86,17 @@ const part1Tests = () => {
   c.run()
   console.assert(c.registers.b == 44354, 'test 5')
 
+  c = new Computer([729,0,0],[0,1,5,4,3,0])
+  c.debug = true
+  c.run()
+  console.assert(c.output.join(',') == '4,6,3,5,6,3,5,2,1,0', 'example')
 }
 const part1 = input => {
   const [registers, instructions] = parse(input)
-  part1Tests()
+  //part1Tests()
   //console.log({registers,instructions})
-  //const comp = new Computer(registers,instructions)
-  //return comp.run().join(',')
+  const comp = new Computer(registers,instructions)
+  return comp.run().join(',')
 }
 
 module.exports = {part1}
