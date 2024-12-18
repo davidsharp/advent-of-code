@@ -3,5 +3,8 @@
   "version": "1.0.2020",
   "main": "index.js",
   "author": "davidsharp <hello@davidsharp.codes>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "easystarjs": "^0.4.4"
+  }
 }

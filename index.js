@@ -13,11 +13,11 @@ const run = async () => {
   const chunk = await readStdIn()
   if (chunk !== null) {
     if(chunk == '' || chunk == '\n') console.log('note: your pasted(?) input is empty')
-    runDay(chunk, day, year)
+    await runDay(chunk, day, year)
   }
   // else use input if there is one
   else if(input) {
-    runDay(input, day, year)
+    await runDay(input, day, year)
   }
   else {
     console.log(`No input data, either pipe input or create './${year}/input/${day}.txt'`)
@@ -35,17 +35,17 @@ const readStdIn = () => (new Promise(resolve=>{
   setTimeout(()=>resolve(null),5)
 }))
 
-const runDay = (data,day,year=thisYear) => {
+const runDay = async (data,day,year=thisYear) => {
   if(parseInt(day)){
     const dayO = require(`./${year}/days/${day}`)
     if(dayO){
       if(dayO.part1){
         console.log(`running day ${day} part 1`);
-        runPart(dayO.part1,data)
+        await runPart(dayO.part1,data)
       }
       if(dayO.part2){
         console.log(`running day ${day} part 2`);
-        runPart(dayO.part2,data)
+        await runPart(dayO.part2,data)
       }
       if(!(dayO.part1||dayO.part2)) console.log(`day ${day} has no exported solutions`)
     }
@@ -55,9 +55,9 @@ const runDay = (data,day,year=thisYear) => {
 
 const { performance } = require('perf_hooks');
 
-const runPart = (fn, data) => {
+const runPart = async (fn, data) => {
   const start = performance.now()
-  const output = fn(data)
+  const output = await fn(data)
   const perf = performance.now()-start
   let [ms,fraction] = String(perf).split('.')
   fraction = fraction.slice(0,3)
