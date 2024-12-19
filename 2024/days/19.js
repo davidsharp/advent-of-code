@@ -1,27 +1,21 @@
+// a regex generated via grex
+const {re} = require('./19.regex.js')
+
 const parse = input => {
   let [towels,patterns] = input.split('\n\n')
-  towels = new Set(towels.split(', '))
+  towels = towels.split(', ')
   patterns = patterns.split('\n')
   return {towels,patterns}
 }
 
+// super slow regex (in JS, at least)
 const part1 = input => {
   const {towels,patterns} = parse(input)
-  const longest = [...towels].reduce((l,t)=>(t.length>l.length?t:l),'').length
-  const shortest = [...towels].reduce((s,t)=>(t.length<s.length?t:s),''.padStart(longest,'x')).length
-  const crawlPattern = pattern => {
-    if(pattern.length == 0) return true
-    for (let i = longest; i >= shortest; i--) {
-      if (towels.has(pattern.slice(0, i))) {
-        if(crawlPattern(pattern.slice(i))) return true
-      }
-    }
-    return false
-  }
-  return patterns.reduce((count, pattern, i) => {
-    if (crawlPattern(pattern)) count++
-    return count
-  },0)
+  //const re = new RegExp(`^(${towels.join('|')})+$`)
+  return patterns.filter((x,i)=>{
+    console.log(`${i+1} of ${patterns.length}`)
+    return x.match(re)
+  }).length
 }
 
 module.exports = {part1}
