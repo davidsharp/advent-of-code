@@ -27,32 +27,14 @@ const parse = input => {
   return {s,path,e}
 }
 
-const part1 = input => {
-  const {path} = parse(input)
-  const shortcuts = []
-  path.forEach(
-    ([x,y],i) => {
-      const directions = [[0,-2],[0,2],[-2,0],[2,0]]
-      for (let [dx, dy] of directions) {
-        const idx = path.findIndex(([_x,_y],_i)=>((_x==x+dx)&&(_y==y+dy)&&_i!=i+2))
-        const diff = (idx - i) - 2
-        if(diff>0) shortcuts.push(diff)
-      }
-    }
-  )
-  return shortcuts.filter(x=>x>=100).length
-}
-
-const part2 = input => {
-  const {path} = parse(input)
+const findShortcuts = (path,cheat) => {
   const shortcuts = []
   path.forEach(
     ([x,y], i) => {
       path.forEach(([_x, _y], j) => {
         if (i != j) {
           const shortcutDist = (x>_x?x-_x:_x-x) + (y>_y?y-_y:_y-y)
-          if (shortcutDist <= 20) {
-            // take shortcut dist from diff
+          if (shortcutDist <= cheat) {
             const diff = (j - i) - shortcutDist
             if(diff>0) shortcuts.push(diff)
           }
@@ -60,7 +42,17 @@ const part2 = input => {
       })
     }
   )
-  return shortcuts.filter(x=>x>=100).length
+  return shortcuts
+}
+
+const part1 = input => {
+  const {path} = parse(input)
+  return findShortcuts(path,2).filter(x=>x>=100).length
+}
+
+const part2 = input => {
+  const {path} = parse(input)
+  return findShortcuts(path,20).filter(x=>x>=100).length
 }
 
 module.exports = {part1,part2}
