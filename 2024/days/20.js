@@ -40,8 +40,27 @@ const part1 = input => {
       }
     }
   )
-  //return shortcuts.sort((a,b)=>a>b?1:-1)
   return shortcuts.filter(x=>x>=100).length
 }
 
-module.exports = {part1}
+const part2 = input => {
+  const {path} = parse(input)
+  const shortcuts = []
+  path.forEach(
+    ([x,y], i) => {
+      path.forEach(([_x, _y], j) => {
+        if (i != j) {
+          const shortcutDist = (x>_x?x-_x:_x-x) + (y>_y?y-_y:_y-y)
+          if (shortcutDist <= 20) {
+            // take shortcut dist from diff
+            const diff = (j - i) - shortcutDist
+            if(diff>0) shortcuts.push(diff)
+          }
+        }
+      })
+    }
+  )
+  return shortcuts.filter(x=>x>=100).length
+}
+
+module.exports = {part1,part2}
