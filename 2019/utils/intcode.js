@@ -20,7 +20,7 @@ class Interpreter {
   halted = false
   pointer = 0 // instruction pointer
   cells = [] // {}?
-  input = null
+  input = []
   output = console.log //default
   constructor(input, output) {
     this.cells = input.split(',').map(Number)
@@ -32,7 +32,8 @@ class Interpreter {
     const instruction = Interpreter.instructions[inst]
     this[instruction](modes)
   } }
-  pipe(value) { this.input = value }
+  // TODO - change pipe to a generator/yield?
+  pipe(value) { this.input.push(value) }
   step(x=1) {
     this.pointer += x
     if (this.pointer > this.cells.length) {
@@ -73,7 +74,7 @@ class Interpreter {
     this.step(4)
   }
   in() {
-    this.cells[this.cells[this.pointer+1]] = this.input
+    this.cells[this.cells[this.pointer+1]] = this.input.shift()
     this.step(2)
   }
   out(modes) {
