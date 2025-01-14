@@ -32,7 +32,7 @@ const part2 = input => {
     let safe = checkReport(report)
     if (!safe) {
       for (let i = 0; !safe && i < report.length; i++) {
-        if(checkReport([...report.slice(0,i),...report.slice(i+1)])) safe = true
+        if(checkReport(report.toSpliced(i,1))) safe = true
       }
     }
     return safeReports += (safe?1:0)

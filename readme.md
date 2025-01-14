@@ -12,3 +12,4 @@ I've been doing them since 2017, and typically I manage about half a month. I te
     * also started on 2015 this year
 * 2022: No majors changes planned, business as usual!
 * 2023: Still operating in the same way, considering re-writing my code runner, but also participating more casually this year (requires Node 20+, due to using some new features)
+* 2024: Business as usual! Does import a library for the first time, and have thoughts of doing 2019's intcode tasks

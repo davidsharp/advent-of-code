@@ -30,16 +30,13 @@ const part2 = input => {
     let x = 0
     let found = false
     while (!found && x < 3 ** (numbers.length-1)) {
-      //console.log(x.toString(3).padStart(3,'0'))
       const operators = numbers.slice(0,-1).map((num,i) => (x.toString(3).padStart(numbers.length-1)[i])).map(Number)
       const calc = numbers.reduce((sum, num, i) => {
         const op = operators[i-1]
-        //console.log(sum,op==0?'*':op==1?'+':'||',num)
         if (op == 0) return sum * num
         if (op == 1) return sum + num
         if (op == 2) return Number(`${sum}${num}`)
       })
-      //console.log(calc)
       if(calc == target) found = true
       x++
     }
