@@ -15,4 +15,23 @@ const part1 = input => input.split('\n').reduce((acc, b) => {
   return acc + j
 },0)
 
-module.exports = {part1}
+const part2 = input => input.split('\n').reduce((acc, b) => {
+  let batteryOffset = 12
+  let batteries = []
+  while (batteryOffset > 0) {
+    let index = b.length-batteryOffset
+    for (let i = index; i >= 0; i--) {
+      if (b[i] >= b[index]) {
+        if(batteries.length==0 || i > batteries[batteries.length-1]){
+          index = i
+        }
+      }
+    }
+    batteries.push(index)
+    batteryOffset--
+  }
+  const j = Number(batteries.map(i=>b[i]).join(''))
+  return acc + j
+},0)
+
+module.exports = {part1, part2}
