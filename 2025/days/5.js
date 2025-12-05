@@ -21,20 +21,12 @@ const part2 = input => {
   }).reduce((newRanges, range, i) => {
     if(i==0) return [range]
     const last = newRanges.pop()
-    if (last[0]<=range[0] && last[1]>= range[0]) {
-      newRanges.push([last[0],range[1]])
+    if (last[0]<=range[0] && last[1] >= range[0]) {
+      newRanges.push([last[0], range[1] > last[1] ? range[1] : last[1]])
     }
     else newRanges.push(last,range)
     return newRanges
   }, []).reduce((count, range) => count + (range[1]-range[0]) + 1,0)
-  /*
-  return ranges.reduce((set, [min,max]) => {
-    for (let i = min; i <= max; i++) {
-      set.add(i)
-    }
-    return set
-  },new Set()).size
-  */
 }
 
 module.exports = {part1,part2}
