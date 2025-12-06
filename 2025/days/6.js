@@ -15,4 +15,30 @@ const part1 = input => {
   return answers.reduce((a,b)=>a+b)
 }
 
-module.exports = {part1}
+const part2 = input => {
+  let rows = input.split('\n')
+  let ops = rows.pop()
+  let i = 0
+  let current_op = null
+  let current_sum = 0
+  let running_total = 0
+  while (i < rows[0].length) {
+    if(ops[i]!=' ') current_op = ops[i]
+    const n = Number(rows.map(row=>row[i]).join(''))
+    if (n) {
+      if(current_op=='+') current_sum += n
+      else {
+        if(current_sum==0) current_sum=n
+        else current_sum *= n
+      }
+    }
+    else {
+      running_total += current_sum
+      current_sum = 0
+    }
+    i++
+  }
+  return current_sum + running_total
+}
+
+module.exports = {part1, part2}
