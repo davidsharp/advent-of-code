@@ -16,7 +16,18 @@ const part1 = input => {
       beams = newBeams
     }
   })
-  return splits //beams.reduce((count,beam)=>beam?count+1:count,0)
+  return splits
 }
 
-module.exports = {part1}
+const part2 = input => {
+  const rows = input.split('\n')
+  const x = rows[0].split('').findIndex(x=>x=='S')
+  return split(rows, x, 1)
+}
+const split = (rows, x, y) => {
+  if(y==rows.length-1) return 1
+  if(rows[y][x]=='^') return split(rows,x-1,y+1) + split(rows,x+1,y+1)
+  return split(rows,x,y+1)
+}
+
+module.exports = {part1,part2}
