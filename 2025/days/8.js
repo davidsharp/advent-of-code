@@ -51,8 +51,9 @@ const part1 = input => {
         if (intersectsAt > -1 && intersectsAt != i) {
           merged[intersectsAt] = circuit.union(merged[intersectsAt])
         }
+        else merged.push(circuit)
       }
-      merged.push(circuit)
+      else merged.push(circuit)
     }
     didIntersect = circuits.length != merged.length
     circuits = merged
