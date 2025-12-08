@@ -13,7 +13,6 @@ const part1 = input => {
     const c = jBoxes[i]
     for (let j = i + 1; j < jBoxes.length ;j++) {
       const cc = jBoxes[j]
-      //console.log(i*j,d(c,cc))
       const dist = d(c,cc)
       if (connex.length < max_con) connex.push([Math.floor(dist), i, j])
       else {
@@ -61,4 +60,29 @@ const part1 = input => {
   return circuits.map(a=>a.size).toSorted((a,b)=>b-a).slice(0,3).reduce((a,b)=>a*b)
 }
 
-module.exports = {part1}
+const part2 = input => {
+  const jBoxes = parse(input)
+  const connex = []
+  const connectedNodes = new Set()
+  for (let i = 0; i < jBoxes.length; i++) {
+    const c = jBoxes[i]
+    for (let j = i + 1; j < jBoxes.length ;j++) {
+      const cc = jBoxes[j]
+      const dist = d(c,cc)
+      connex.push([Math.floor(dist), i, j])
+    }
+  }
+  connex.sort(([dist_a],[dist_b])=>dist_a-dist_b)
+  let i = 0
+  let last = []
+  while (connectedNodes.size != jBoxes.length) {
+    connectedNodes.add(connex[i][1])
+    connectedNodes.add(connex[i][2])
+    last = connex[i]
+    i++
+  }
+  const [_,a,b] = last
+  return jBoxes[a][0] * jBoxes[b][0]
+}
+
+module.exports = {part1,part2}
