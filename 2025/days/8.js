@@ -44,6 +44,7 @@ const part1 = input => {
     )
     if (intersectsAt>-1) {
       merged[intersectsAt] = circuit.union(merged[intersectsAt])
+      return merged
     }
     return [...merged,circuit]
   },[])
