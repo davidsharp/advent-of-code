@@ -7,25 +7,47 @@ const d = (a, b) => Math.sqrt(
 
 const part1 = input => {
   const jBoxes = parse(input)
-  const max_con = 10
-  let connex = []
+  const max_con = 1000
+  const connex = []
   for (let i = 0; i < jBoxes.length; i++) {
     const c = jBoxes[i]
     for (let j = i + 1; j < jBoxes.length ;j++) {
       const cc = jBoxes[j]
       //console.log(i*j,d(c,cc))
       const dist = d(c,cc)
-      if (connex.length < max_con) connex.push([dist, c, cc])
+      if (connex.length < max_con) connex.push([dist, i, j])
       else {
         if(dist < connex[connex.length-1][0]) {
-          connex.push([dist,c,cc])
+          connex.push([dist,i,j])
           connex.sort((a,b)=>a[0]-b[0])
           connex.pop()
         }
       }
     }
   }
-  return connex
+  let circuits = connex.reduce((circuits,[_,a,b]) => {
+    const matching_circuit = circuits.find(
+      circuit => circuit.has(a) || circuit.has(b)
+    )
+    if (matching_circuit) {
+      matching_circuit.add(a)
+      matching_circuit.add(b)
+    }
+    else {
+      circuits.push(new Set([a,b]))
+    }
+    return circuits
+  }, []).reduce((merged,circuit) => {
+    if(!merged.length) return [circuit]
+    const intersectsAt = merged.findIndex(
+      _circuit => circuit.intersection(_circuit).size > 0
+    )
+    if (intersectsAt>-1) {
+      merged[intersectsAt] = circuit.union(merged[intersectsAt])
+    }
+    return [...merged,circuit]
+  },[])
+  return circuits.map(a=>a.size).toSorted((a,b)=>b-a).slice(0,3).reduce((a,b)=>a*b)
 }
 
 module.exports = {part1}
