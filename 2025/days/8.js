@@ -15,10 +15,10 @@ const part1 = input => {
       const cc = jBoxes[j]
       //console.log(i*j,d(c,cc))
       const dist = d(c,cc)
-      if (connex.length < max_con) connex.push([dist, i, j])
+      if (connex.length < max_con) connex.push([Math.floor(dist), i, j])
       else {
         if(dist < connex[connex.length-1][0]) {
-          connex.push([dist,i,j])
+          connex.push([Math.floor(dist),i,j])
           connex.sort((a,b)=>a[0]-b[0])
           connex.pop()
         }
@@ -37,17 +37,26 @@ const part1 = input => {
       circuits.push(new Set([a,b]))
     }
     return circuits
-  }, []).reduce((merged,circuit) => {
-    if(!merged.length) return [circuit]
-    const intersectsAt = merged.findIndex(
-      _circuit => circuit.intersection(_circuit).size > 0
-    )
-    if (intersectsAt>-1) {
-      merged[intersectsAt] = circuit.union(merged[intersectsAt])
-      return merged
+  }, [])
+  let didIntersect=true
+  while(didIntersect) {
+    didIntersect = false
+    let merged = []
+    for (let i in circuits) {
+      const circuit = circuits[i]
+      if (merged.length) {
+        const intersectsAt = merged.findIndex(
+          _circuit => circuit.intersection(_circuit).size > 0
+        )
+        if (intersectsAt > -1 && intersectsAt != i) {
+          merged[intersectsAt] = circuit.union(merged[intersectsAt])
+        }
+      }
+      merged.push(circuit)
     }
-    return [...merged,circuit]
-  },[])
+    didIntersect = circuits.length != merged.length
+    circuits = merged
+  }
   return circuits.map(a=>a.size).toSorted((a,b)=>b-a).slice(0,3).reduce((a,b)=>a*b)
 }
 
